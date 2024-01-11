@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		9001EF679D6ADBCF9E43B52B /* Pods_MDCH.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB694B7C2FF0E9FE333A302F /* Pods_MDCH.framework */; };
 		9D24AB532B4EFC20006AB0AC /* AuthHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D24AB522B4EFC20006AB0AC /* AuthHeaderView.swift */; };
+		9D3C711D2B50A212006AB5C1 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3C711C2B50A212006AB5C1 /* AlertManager.swift */; };
 		9D59945C2B4F102200E88477 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D59945B2B4F102200E88477 /* CustomTextField.swift */; };
 		9D59945E2B4F16FB00E88477 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D59945D2B4F16FB00E88477 /* CustomButton.swift */; };
 		9D5994602B4F244500E88477 /* WebViewrController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D59945F2B4F244500E88477 /* WebViewrController.swift */; };
@@ -24,6 +25,7 @@
 
 /* Begin PBXFileReference section */
 		9D24AB522B4EFC20006AB0AC /* AuthHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthHeaderView.swift; sourceTree = "<group>"; };
+		9D3C711C2B50A212006AB5C1 /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 		9D59945B2B4F102200E88477 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 		9D59945D2B4F16FB00E88477 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		9D59945F2B4F244500E88477 /* WebViewrController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewrController.swift; sourceTree = "<group>"; };
@@ -81,6 +83,18 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		9D3C711B2B50A1CF006AB5C1 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				9D974BFB2B4ECF3B005DF8C6 /* ForgotPasswordController.swift */,
+				9D974BFD2B4ECF92005DF8C6 /* LoginController.swift */,
+				9D974BFF2B4ED011005DF8C6 /* RegisterController.swift */,
+				9D974C012B4ED03F005DF8C6 /* HomeController.swift */,
+				9D59945F2B4F244500E88477 /* WebViewrController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
 		9D67C4B62B471FEB00B96EC7 = {
 			isa = PBXGroup;
 			children = (
@@ -102,12 +116,9 @@
 		9D67C4C12B471FEB00B96EC7 /* MDCH */ = {
 			isa = PBXGroup;
 			children = (
+				9D3C711C2B50A212006AB5C1 /* AlertManager.swift */,
 				9D24AB512B4EFBF8006AB0AC /* Views */,
-				9D974BFB2B4ECF3B005DF8C6 /* ForgotPasswordController.swift */,
-				9D974C012B4ED03F005DF8C6 /* HomeController.swift */,
-				9D974BFD2B4ECF92005DF8C6 /* LoginController.swift */,
-				9D974BFF2B4ED011005DF8C6 /* RegisterController.swift */,
-				9D59945F2B4F244500E88477 /* WebViewrController.swift */,
+				9D3C711B2B50A1CF006AB5C1 /* Controllers */,
 				9D67C4D62B47204700B96EC7 /* Application */,
 				9D67C4D72B47206600B96EC7 /* Resources */,
 				9D67C4D02B471FED00B96EC7 /* Info.plist */,
@@ -249,6 +260,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9D974BFC2B4ECF3B005DF8C6 /* ForgotPasswordController.swift in Sources */,
+				9D3C711D2B50A212006AB5C1 /* AlertManager.swift in Sources */,
 				9D974C022B4ED03F005DF8C6 /* HomeController.swift in Sources */,
 				9D59945E2B4F16FB00E88477 /* CustomButton.swift in Sources */,
 				9D974C002B4ED011005DF8C6 /* RegisterController.swift in Sources */,
