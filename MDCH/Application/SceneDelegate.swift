@@ -20,6 +20,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.rootViewController = nav
         self.window = window
         self.window?.makeKeyAndVisible()
+        
+        let userRequest = RegisterUserRequest(username: "Logan",
+                                              email: "vlad@gmail.com",
+                                              password: "password123")
+        AuthService.shared.registerUser(with: userRequest) { wasRegistered, error in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+            print("wasRegistered", wasRegistered)
+        }
     }
     
 
