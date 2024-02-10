@@ -1,16 +1,17 @@
 //
-//  WevViewrController.swift
+//  WebViewController.swift
 //  MDCH
 //
-//  Created by 123 on 10.01.24.
+//  Created by 123 on 6.02.24.
 //
 
 import UIKit
 import WebKit
 import SnapKit
 
-class WebViewrController: UIViewController {
-    
+
+
+class WebViewController: UIViewController {
     private let urlString: String
     private let webView = WKWebView()
     
@@ -20,26 +21,26 @@ class WebViewrController: UIViewController {
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError("init (coder:) has not be implemented")
     }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupUI()
-        
         guard let url = URL(string: self.urlString) else {
             self.dismiss(animated: true)
             return
         }
-        
         self.webView.load(URLRequest(url: url))
     }
     
+    
     private func setupUI() {
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(didTapDone))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action:#selector(didTapDone))
         self.navigationController?.navigationBar.backgroundColor = .secondarySystemBackground
-        self.view.addSubview(webView)
         
+        self.view.addSubview(webView)
         webView.snp.makeConstraints { web in
             web.top.equalToSuperview()
             web.bottom.equalToSuperview()
@@ -47,9 +48,10 @@ class WebViewrController: UIViewController {
             web.trailing.equalToSuperview()
         }
     }
-
+    
     @objc private func didTapDone() {
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true)
     }
-   
 }
+
+
