@@ -2,13 +2,16 @@
 //  CustomButton.swift
 //  MDCH
 //
-//  Created by 123 on 6.02.24.
+//  Created by 123 on 17.02.24.
 //
 
 import UIKit
 
 
+
+
 class CustomButton: UIButton {
+    
     
     enum FontSize {
         case big
@@ -25,20 +28,16 @@ class CustomButton: UIButton {
         
         self.backgroundColor = hasBackground ? .systemBlue : .clear
         
-        let titleColor: UIColor = hasBackground ? .black : .white
+        let titleColor: UIColor = hasBackground ? .white : .systemBlue
         self.setTitleColor(titleColor, for: .normal)
         
-        switch fontSize{
+        switch fontSize {
         case .big:
-            self.titleLabel?.font = .systemFont(ofSize: 22,weight: .bold)
-            self.layer.borderColor = UIColor.black.cgColor
-            self.layer.borderWidth = 2.0
-            self.layer.cornerRadius = 23
-            self.backgroundColor = .systemBlue
+            self.titleLabel?.font = .systemFont(ofSize: 22, weight: .bold)
         case .medium:
-            self.titleLabel?.font = .systemFont(ofSize: 15, weight: .semibold)
+            self.titleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
         case .small:
-            self.titleLabel?.font = .systemFont(ofSize: 10, weight: .regular)
+            self.titleLabel?.font = .systemFont(ofSize: 16, weight: .regular)
         }
     }
     
