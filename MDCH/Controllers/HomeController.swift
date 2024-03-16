@@ -18,6 +18,7 @@ class HomeController: UIViewController {
         super.viewDidLoad()
         setupUI()
         view.backgroundColor = .systemBlue
+        self.navigationItem.setHidesBackButton(true, animated: false)
     }
     
     

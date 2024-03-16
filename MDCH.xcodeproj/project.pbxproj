@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9D41A69D2BA6357B00B499DD /* WebViewerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D41A69C2BA6357B00B499DD /* WebViewerController.swift */; };
 		9DA3D5C32B80D6430025466C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA3D5C22B80D6430025466C /* AppDelegate.swift */; };
 		9DA3D5C52B80D6430025466C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA3D5C42B80D6430025466C /* SceneDelegate.swift */; };
 		9DA3D5CC2B80D6450025466C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9DA3D5CB2B80D6450025466C /* Assets.xcassets */; };
@@ -27,6 +28,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9D41A69C2BA6357B00B499DD /* WebViewerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewerController.swift; sourceTree = "<group>"; };
 		9DA3D5BF2B80D6430025466C /* MDCH.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MDCH.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DA3D5C22B80D6430025466C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9DA3D5C42B80D6430025466C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -114,6 +116,7 @@
 				9DA3D5E62B80D9780025466C /* LoginController.swift */,
 				9DA3D5EB2B80D9E50025466C /* RegisterController.swift */,
 				9DA3D5ED2B80D9F60025466C /* ForgotPasswordController.swift */,
+				9D41A69C2BA6357B00B499DD /* WebViewerController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -216,6 +219,7 @@
 				9DBB90A32B80E93700BB24A5 /* CustomTextField.swift in Sources */,
 				9DA3D5C52B80D6430025466C /* SceneDelegate.swift in Sources */,
 				9DA3D5E52B80D9240025466C /* HomeController.swift in Sources */,
+				9D41A69D2BA6357B00B499DD /* WebViewerController.swift in Sources */,
 				9DA3D5F12B80DC610025466C /* AuthHeaderView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
