@@ -15,7 +15,7 @@ class LoginController: UIViewController {
     
     //MARK: - UI Components
     private let headerView = AuthHeaderView(title: "Sign In", subTitle: "Sign in to your account")
-    private let usernameField = CustomTextField(authFieldType: .username)
+    private let emailField = CustomTextField(authFieldType: .email)
     private let passwordField = CustomTextField(authFieldType: .password)
     private let signInButton = CustomButton(title: "Sign In", hasBackground: true, fontSize: .big)
     private let newUserButton = CustomButton(title: "New User? Create Account.", hasBackground: false, fontSize: .medium)
@@ -42,7 +42,7 @@ class LoginController: UIViewController {
     //MARK: - UI Setup
     private func setupUI() {
         self.view.addSubview(headerView)
-        self.view.addSubview(usernameField)
+        self.view.addSubview(emailField)
         self.view.addSubview(passwordField)
         self.view.addSubview(signInButton)
         self.view.addSubview(newUserButton)
@@ -55,15 +55,15 @@ class LoginController: UIViewController {
             header.height.equalTo(270)
         }
         
-        usernameField.snp.makeConstraints { nameField in
-            nameField.top.equalTo(headerView.snp.bottom).offset(45)
+        emailField.snp.makeConstraints { nameField in
+            nameField.top.equalTo(headerView.snp.bottom).offset(25)
             nameField.centerX.equalTo(headerView.snp.centerX)
             nameField.height.equalTo(55)
             nameField.width.equalToSuperview().multipliedBy(0.85)
         }
         
         passwordField.snp.makeConstraints { password in
-            password.top.equalTo(usernameField.snp.bottom).offset(25)
+            password.top.equalTo(emailField.snp.bottom).offset(25)
             password.centerX.equalTo(headerView.snp.centerX)
             password.height.equalTo(55)
             password.width.equalToSuperview().multipliedBy(0.85)

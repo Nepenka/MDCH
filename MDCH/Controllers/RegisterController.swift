@@ -16,7 +16,7 @@ class RegisterController: UIViewController {
     private let emailField = CustomTextField(authFieldType: .email)
     private let usernameField = CustomTextField(authFieldType: .username)
     private let passwordField = CustomTextField(authFieldType: .password)
-    private let signInButton = CustomButton(title: "Already have an account? Sign In.", hasBackground: false, fontSize: .medium)
+    private let signInButton = CustomButton(title: "Already have an account? Sign In.", hasBackground: false, fontSize: .small)
     private let signUpButton = CustomButton(title: "Sign Up", hasBackground: true, fontSize: .big)
     private let termsTextView: UITextView = {
         let attributedString = NSMutableAttributedString(string: "By creating an account,you agree to our Terms & Conditions and you knowledge that you have read our Privacy Policy.")
