@@ -54,7 +54,7 @@ class ForgotPasswordController: UIViewController {
         }
         
         emailField.snp.makeConstraints { email in
-            email.top.equalTo(headerView.snp.bottom).offset(100)
+            email.top.equalTo(headerView.snp.bottom).offset(75)
             email.centerX.equalTo(headerView.snp.centerX)
             email.height.equalTo(55)
             email.width.equalToSuperview().multipliedBy(0.85)

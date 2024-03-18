@@ -72,7 +72,7 @@ class RegisterController: UIViewController {
         }
         
         usernameField.snp.makeConstraints { nameField in
-            nameField.top.equalTo(headerView.snp.bottom).offset(45)
+            nameField.top.equalTo(headerView.snp.bottom).offset(25)
             nameField.centerX.equalTo(headerView.snp.centerX)
             nameField.height.equalTo(55)
             nameField.width.equalToSuperview().multipliedBy(0.85)

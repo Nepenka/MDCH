@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9D41A69D2BA6357B00B499DD /* WebViewerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D41A69C2BA6357B00B499DD /* WebViewerController.swift */; };
+		9D7029E02BA84D4F0007DF10 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7029DF2BA84D4F0007DF10 /* AlertManager.swift */; };
 		9DA3D5C32B80D6430025466C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA3D5C22B80D6430025466C /* AppDelegate.swift */; };
 		9DA3D5C52B80D6430025466C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA3D5C42B80D6430025466C /* SceneDelegate.swift */; };
 		9DA3D5CC2B80D6450025466C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9DA3D5CB2B80D6450025466C /* Assets.xcassets */; };
@@ -29,6 +30,7 @@
 
 /* Begin PBXFileReference section */
 		9D41A69C2BA6357B00B499DD /* WebViewerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewerController.swift; sourceTree = "<group>"; };
+		9D7029DF2BA84D4F0007DF10 /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 		9DA3D5BF2B80D6430025466C /* MDCH.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MDCH.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DA3D5C22B80D6430025466C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9DA3D5C42B80D6430025466C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -80,13 +82,12 @@
 		9DA3D5C12B80D6430025466C /* MDCH */ = {
 			isa = PBXGroup;
 			children = (
+				9D7029DF2BA84D4F0007DF10 /* AlertManager.swift */,
 				9DA3D5EF2B80DC4E0025466C /* Views */,
 				9DA3D5EA2B80D9CB0025466C /* Controllers */,
 				9DA3D5E92B80D9B30025466C /* Application */,
 				9DA3D5E82B80D99E0025466C /* Resources */,
 				9DA3D5D02B80D6450025466C /* Info.plist */,
-				9DBB90A22B80E93700BB24A5 /* CustomTextField.swift */,
-				9DBB90A42B80F01500BB24A5 /* CustomButton.swift */,
 			);
 			path = MDCH;
 			sourceTree = "<group>";
@@ -125,6 +126,8 @@
 			isa = PBXGroup;
 			children = (
 				9DA3D5F02B80DC610025466C /* AuthHeaderView.swift */,
+				9DBB90A22B80E93700BB24A5 /* CustomTextField.swift */,
+				9DBB90A42B80F01500BB24A5 /* CustomButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -212,6 +215,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9DA3D5EC2B80D9E50025466C /* RegisterController.swift in Sources */,
+				9D7029E02BA84D4F0007DF10 /* AlertManager.swift in Sources */,
 				9DA3D5EE2B80D9F60025466C /* ForgotPasswordController.swift in Sources */,
 				9DBB90A52B80F01500BB24A5 /* CustomButton.swift in Sources */,
 				9DA3D5C32B80D6430025466C /* AppDelegate.swift in Sources */,

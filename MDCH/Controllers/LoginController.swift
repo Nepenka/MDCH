@@ -26,6 +26,8 @@ class LoginController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = true
+        
+        
     }
     
     override func viewDidLoad() {
@@ -36,7 +38,6 @@ class LoginController: UIViewController {
         signInButton.addTarget(self, action: #selector(signInButtonAction), for: .touchUpInside)
         forgotPasswordButton.addTarget(self, action: #selector(forgotButtonAction), for: .touchUpInside)
         newUserButton.addTarget(self, action: #selector(userButtonAction), for: .touchUpInside)
-        
     }
     
     //MARK: - UI Setup
