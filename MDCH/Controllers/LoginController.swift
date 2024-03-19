@@ -38,6 +38,7 @@ class LoginController: UIViewController {
         signInButton.addTarget(self, action: #selector(signInButtonAction), for: .touchUpInside)
         forgotPasswordButton.addTarget(self, action: #selector(forgotButtonAction), for: .touchUpInside)
         newUserButton.addTarget(self, action: #selector(userButtonAction), for: .touchUpInside)
+        //self.userButtonAction()
     }
     
     //MARK: - UI Setup
@@ -100,9 +101,28 @@ class LoginController: UIViewController {
     //MARK: - Selectors
     
     @objc func signInButtonAction() {
-        let vc = HomeController()
-        vc.modalPresentationStyle = .fullScreen
-        self.present(vc, animated: true)
+        let loginRequest = LoginUserRequest(email: self.emailField.text ?? "", password: self.passwordField.text ?? "")
+        
+        
+        if !Validator.isValidEmail(with: loginRequest.email) {
+            AlertManager.showInvalidEmailAlert(on: self)
+            return
+        }
+        
+        if !Validator.isPasswordValida(for: loginRequest.password) {
+            AlertManager.showInvalidPasswordAlert(on: self)
+            return
+        }
+        
+        AuthService.shared.signIn(with: loginRequest) { error in
+            if let error = error {
+                AlertManager.showSignInErrorAlert(on: self, with: error)
+                return
+            }
+            if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
+                sceneDelegate.checkAuthentication()
+            }
+        }
     }
     
     @objc func forgotButtonAction() {

@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		9D41A69D2BA6357B00B499DD /* WebViewerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D41A69C2BA6357B00B499DD /* WebViewerController.swift */; };
+		9D64D25B2BA9D31600157E44 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9D64D25A2BA9D31600157E44 /* GoogleService-Info.plist */; };
+		9D64D25D2BA9D64300157E44 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D64D25C2BA9D64300157E44 /* AuthService.swift */; };
+		9D64D2602BA9D74D00157E44 /* RegisterUserRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D64D25F2BA9D74D00157E44 /* RegisterUserRequest.swift */; };
+		9D64D2622BA9DC8F00157E44 /* LoginUserRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D64D2612BA9DC8F00157E44 /* LoginUserRequest.swift */; };
+		9D64D2642BA9F4D100157E44 /* Validator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D64D2632BA9F4D100157E44 /* Validator.swift */; };
 		9D7029E02BA84D4F0007DF10 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7029DF2BA84D4F0007DF10 /* AlertManager.swift */; };
 		9DA3D5C32B80D6430025466C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA3D5C22B80D6430025466C /* AppDelegate.swift */; };
 		9DA3D5C52B80D6430025466C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA3D5C42B80D6430025466C /* SceneDelegate.swift */; };
@@ -30,6 +35,11 @@
 
 /* Begin PBXFileReference section */
 		9D41A69C2BA6357B00B499DD /* WebViewerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewerController.swift; sourceTree = "<group>"; };
+		9D64D25A2BA9D31600157E44 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		9D64D25C2BA9D64300157E44 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		9D64D25F2BA9D74D00157E44 /* RegisterUserRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterUserRequest.swift; sourceTree = "<group>"; };
+		9D64D2612BA9DC8F00157E44 /* LoginUserRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginUserRequest.swift; sourceTree = "<group>"; };
+		9D64D2632BA9F4D100157E44 /* Validator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validator.swift; sourceTree = "<group>"; };
 		9D7029DF2BA84D4F0007DF10 /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 		9DA3D5BF2B80D6430025466C /* MDCH.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MDCH.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DA3D5C22B80D6430025466C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -63,6 +73,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9D64D25E2BA9D72F00157E44 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				9D64D2612BA9DC8F00157E44 /* LoginUserRequest.swift */,
+				9D64D25F2BA9D74D00157E44 /* RegisterUserRequest.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		9DA3D5B62B80D6430025466C = {
 			isa = PBXGroup;
 			children = (
@@ -82,7 +101,10 @@
 		9DA3D5C12B80D6430025466C /* MDCH */ = {
 			isa = PBXGroup;
 			children = (
+				9D64D25E2BA9D72F00157E44 /* Models */,
 				9D7029DF2BA84D4F0007DF10 /* AlertManager.swift */,
+				9D64D25C2BA9D64300157E44 /* AuthService.swift */,
+				9D64D2632BA9F4D100157E44 /* Validator.swift */,
 				9DA3D5EF2B80DC4E0025466C /* Views */,
 				9DA3D5EA2B80D9CB0025466C /* Controllers */,
 				9DA3D5E92B80D9B30025466C /* Application */,
@@ -104,6 +126,7 @@
 		9DA3D5E92B80D9B30025466C /* Application */ = {
 			isa = PBXGroup;
 			children = (
+				9D64D25A2BA9D31600157E44 /* GoogleService-Info.plist */,
 				9DA3D5C42B80D6430025466C /* SceneDelegate.swift */,
 				9DA3D5C22B80D6430025466C /* AppDelegate.swift */,
 			);
@@ -204,6 +227,7 @@
 			files = (
 				9DA3D5CF2B80D6450025466C /* LaunchScreen.storyboard in Resources */,
 				9DA3D5CC2B80D6450025466C /* Assets.xcassets in Resources */,
+				9D64D25B2BA9D31600157E44 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -217,10 +241,14 @@
 				9DA3D5EC2B80D9E50025466C /* RegisterController.swift in Sources */,
 				9D7029E02BA84D4F0007DF10 /* AlertManager.swift in Sources */,
 				9DA3D5EE2B80D9F60025466C /* ForgotPasswordController.swift in Sources */,
+				9D64D25D2BA9D64300157E44 /* AuthService.swift in Sources */,
 				9DBB90A52B80F01500BB24A5 /* CustomButton.swift in Sources */,
 				9DA3D5C32B80D6430025466C /* AppDelegate.swift in Sources */,
 				9DA3D5E72B80D9790025466C /* LoginController.swift in Sources */,
+				9D64D2642BA9F4D100157E44 /* Validator.swift in Sources */,
 				9DBB90A32B80E93700BB24A5 /* CustomTextField.swift in Sources */,
+				9D64D2602BA9D74D00157E44 /* RegisterUserRequest.swift in Sources */,
+				9D64D2622BA9DC8F00157E44 /* LoginUserRequest.swift in Sources */,
 				9DA3D5C52B80D6430025466C /* SceneDelegate.swift in Sources */,
 				9DA3D5E52B80D9240025466C /* HomeController.swift in Sources */,
 				9D41A69D2BA6357B00B499DD /* WebViewerController.swift in Sources */,

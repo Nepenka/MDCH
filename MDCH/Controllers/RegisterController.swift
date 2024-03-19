@@ -18,6 +18,7 @@ class RegisterController: UIViewController {
     private let passwordField = CustomTextField(authFieldType: .password)
     private let signInButton = CustomButton(title: "Already have an account? Sign In.", hasBackground: false, fontSize: .small)
     private let signUpButton = CustomButton(title: "Sign Up", hasBackground: true, fontSize: .big)
+    
     private let termsTextView: UITextView = {
         let attributedString = NSMutableAttributedString(string: "By creating an account,you agree to our Terms & Conditions and you knowledge that you have read our Privacy Policy.")
         attributedString.addAttribute(.link, value: "terms://termsAndConditions", range: (attributedString.string as NSString).range(of: "Terms & Conditions"))
@@ -93,7 +94,7 @@ class RegisterController: UIViewController {
         }
         
         signUpButton.snp.makeConstraints { upButton in
-            upButton.top.equalTo(emailField.snp.bottom).offset(22)
+            upButton.top.equalTo(passwordField.snp.bottom).offset(22)
             upButton.centerX.equalTo(headerView.snp.centerX)
             upButton.height.equalTo(55)
             upButton.width.equalToSuperview().multipliedBy(0.85)
@@ -104,8 +105,6 @@ class RegisterController: UIViewController {
             termsView.centerX.equalTo(headerView.snp.centerX)
             termsView.width.equalToSuperview().multipliedBy(0.85)
         }
-        
-        
         
         signInButton.snp.makeConstraints { button in
             button.top.equalTo(termsTextView.snp.bottom).offset(11)
@@ -123,9 +122,40 @@ class RegisterController: UIViewController {
     //MARK: - Selectors
     
     @objc func signUpAction() {
-        let webViewer = WebViewerController(with: "")
-        let nav = UINavigationController(rootViewController: webViewer)
-        self.present(nav, animated: true)
+        let registerUserRequest = RegisterUserRequest(username: self.usernameField.text ?? "",
+                                                      email: self.emailField.text ?? "",
+                                                      password: self.passwordField.text ?? "")
+        
+        if !Validator.isValidUsername(for: registerUserRequest.username) {
+            AlertManager.showInvalidUsernameAlert(on: self)
+            return
+        }
+        
+        if !Validator.isValidEmail(with: registerUserRequest.email) {
+            AlertManager.showInvalidEmailAlert(on: self)
+            return
+        }
+        
+        if !Validator.isPasswordValida(for: registerUserRequest.password) {
+            AlertManager.showInvalidPasswordAlert(on: self)
+            return
+        }
+        
+        AuthService.shared.registerUser(with: registerUserRequest) { [weak self] wasRegistered, error in
+            
+            guard let self = self else {return}
+            if let error = error {
+                AlertManager.showRegistrationErrorAlert(on: self, with: error)
+                return
+            }
+            if wasRegistered {
+                if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
+                    sceneDelegate.checkAuthentication()
+                } else {
+                    AlertManager.showRegistrationErrorAlert(on: self)
+                }
+            }
+        }
     }
     
     @objc func signInButtonAction() {

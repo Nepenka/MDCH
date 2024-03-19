@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyAl3eiT7orVKe3_M3S4WXLxuTRK1-NN0BY</string>
+	<key>GCM_SENDER_ID</key>
+	<string>578875603530</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>Nepena.MDCH</string>
+	<key>PROJECT_ID</key>
+	<string>mojo-dojo-casa-house-affc5</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mojo-dojo-casa-house-affc5.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:578875603530:ios:172211fc7735e5027944b3</string>
+</dict>
+</plist>

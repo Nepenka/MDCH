@@ -12,6 +12,7 @@ import SnapKit
 
 class ForgotPasswordController: UIViewController {
     
+    
     private let headerView = AuthHeaderView(title: "Forgot Password?", subTitle: "Reset your password")
     private let emailField = CustomTextField(authFieldType: .email)
     private let resetPassword = CustomButton(title: "Sign Up",hasBackground: true ,fontSize: .big)

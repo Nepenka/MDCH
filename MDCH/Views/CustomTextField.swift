@@ -40,7 +40,7 @@ class CustomTextField: UITextField {
             self.isSecureTextEntry = true
             
         case .email:
-            self.placeholder = "Email"
+            self.placeholder = "Email Address"
             self.keyboardType = .emailAddress
             self.textContentType = .emailAddress
             
