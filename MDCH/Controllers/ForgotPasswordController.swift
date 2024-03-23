@@ -65,9 +65,21 @@ class ForgotPasswordController: UIViewController {
     }
     
     @objc func resetPasswordAction() {
-        guard let email = self.emailField.text, !email.isEmpty else { return }
+        let email = self.emailField.text ?? ""
+
+        if !Validator.isValidEmail(for: email) {
+            AlertManager.showInvalidEmailAlert(on: self)
+            return
+        }
         
-        //TODO: - Email validation
+        AuthService.shared.forgotPassword(with: email) { [weak self] error in
+            guard let self = self else {return}
+            if let error = error {
+                AlertManager.showErrorSendingPasswordReset(on: self, with: error)
+                return
+            }
+            
+            AlertManager.showPasswordResetSend(on: self)
+        }
     }
-    
 }

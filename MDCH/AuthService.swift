@@ -22,7 +22,7 @@ class AuthService {
         let password = userRequest.password
         
         Auth.auth().createUser(withEmail: email, password: password) { result , error in
-            if let error = error {
+            if error != nil {
                 completion(false, nil)
                 return
             }
@@ -64,6 +64,14 @@ class AuthService {
             completion(nil)
         }catch let error{
             completion(error)
+        }
+    }
+    
+    public func forgotPassword(with email: String, completion: @escaping (Error?) -> Void) {
+        
+        Auth.auth().sendPasswordReset(withEmail: email) { error in
+            completion(error)
+            
         }
     }
     

@@ -38,7 +38,7 @@ class LoginController: UIViewController {
         signInButton.addTarget(self, action: #selector(signInButtonAction), for: .touchUpInside)
         forgotPasswordButton.addTarget(self, action: #selector(forgotButtonAction), for: .touchUpInside)
         newUserButton.addTarget(self, action: #selector(userButtonAction), for: .touchUpInside)
-        //self.userButtonAction()
+       
     }
     
     //MARK: - UI Setup
@@ -104,12 +104,12 @@ class LoginController: UIViewController {
         let loginRequest = LoginUserRequest(email: self.emailField.text ?? "", password: self.passwordField.text ?? "")
         
         
-        if !Validator.isValidEmail(with: loginRequest.email) {
+        if !Validator.isValidEmail(for: loginRequest.email) {
             AlertManager.showInvalidEmailAlert(on: self)
             return
         }
         
-        if !Validator.isPasswordValida(for: loginRequest.password) {
+        if !Validator.isPasswordValid(for: loginRequest.password) {
             AlertManager.showInvalidPasswordAlert(on: self)
             return
         }

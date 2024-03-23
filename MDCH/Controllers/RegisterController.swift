@@ -131,32 +131,33 @@ class RegisterController: UIViewController {
             return
         }
         
-        if !Validator.isValidEmail(with: registerUserRequest.email) {
+        if !Validator.isValidEmail(for: registerUserRequest.email) {
             AlertManager.showInvalidEmailAlert(on: self)
             return
         }
         
-        if !Validator.isPasswordValida(for: registerUserRequest.password) {
+        if !Validator.isPasswordValid(for: registerUserRequest.password) {
             AlertManager.showInvalidPasswordAlert(on: self)
             return
         }
         
         AuthService.shared.registerUser(with: registerUserRequest) { [weak self] wasRegistered, error in
-            
-            guard let self = self else {return}
-            if let error = error {
-                AlertManager.showRegistrationErrorAlert(on: self, with: error)
-                return
-            }
-            if wasRegistered {
-                if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
-                    sceneDelegate.checkAuthentication()
-                } else {
-                    AlertManager.showRegistrationErrorAlert(on: self)
-                }
-            }
-        }
-    }
+                   guard let self = self else { return }
+                   
+                   if let error = error {
+                       AlertManager.showRegistrationErrorAlert(on: self, with: error)
+                       return
+                   }
+                   
+                   if wasRegistered {
+                       if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
+                           sceneDelegate.checkAuthentication()
+                       }
+                   } else {
+                       AlertManager.showRegistrationErrorAlert(on: self)
+                   }
+               }
+           }
     
     @objc func signInButtonAction() {
         self.navigationController?.popToRootViewController(animated: true)
