@@ -12,6 +12,8 @@ import UIKit
 
 class NewsController: UIViewController {
     
+    let newsButton: UIButton = .init()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white

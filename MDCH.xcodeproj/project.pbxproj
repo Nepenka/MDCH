@@ -36,6 +36,7 @@
 		9DB8C6002BAF8C7900A3E4D9 /* SettingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB8C5FF2BAF8C7900A3E4D9 /* SettingController.swift */; };
 		9DBB90A32B80E93700BB24A5 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DBB90A22B80E93700BB24A5 /* CustomTextField.swift */; };
 		9DBB90A52B80F01500BB24A5 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DBB90A42B80F01500BB24A5 /* CustomButton.swift */; };
+		9DD6F7D32BB0BAB8000C682B /* CustomLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DD6F7D22BB0BAB8000C682B /* CustomLabel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +65,7 @@
 		9DB8C5FF2BAF8C7900A3E4D9 /* SettingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingController.swift; sourceTree = "<group>"; };
 		9DBB90A22B80E93700BB24A5 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 		9DBB90A42B80F01500BB24A5 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
+		9DD6F7D22BB0BAB8000C682B /* CustomLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLabel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,6 +168,7 @@
 				9DA3D5F02B80DC610025466C /* AuthHeaderView.swift */,
 				9DBB90A22B80E93700BB24A5 /* CustomTextField.swift */,
 				9DBB90A42B80F01500BB24A5 /* CustomButton.swift */,
+				9DD6F7D22BB0BAB8000C682B /* CustomLabel.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -263,6 +266,7 @@
 				9DBB90A52B80F01500BB24A5 /* CustomButton.swift in Sources */,
 				9DB8C5FE2BAF8C3B00A3E4D9 /* MessageController.swift in Sources */,
 				9DA3D5C32B80D6430025466C /* AppDelegate.swift in Sources */,
+				9DD6F7D32BB0BAB8000C682B /* CustomLabel.swift in Sources */,
 				9DA3D5E72B80D9790025466C /* LoginController.swift in Sources */,
 				9D64D2642BA9F4D100157E44 /* Validator.swift in Sources */,
 				9DBB90A32B80E93700BB24A5 /* CustomTextField.swift in Sources */,
