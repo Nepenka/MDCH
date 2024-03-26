@@ -6,12 +6,12 @@
 //
 
 import UIKit
-
+import SnapKit
 
 
 
 class MessageController: UIViewController {
-    let searchBar: UISearchBar = .init()
+   
     let tableView: UITableView = .init()
     
     
@@ -23,18 +23,12 @@ class MessageController: UIViewController {
         self.navigationItem.setHidesBackButton(true, animated: false)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(TableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(MessageTableViewCell.self, forCellReuseIdentifier: "cell")
     }
     
     private func setupUI() {
-        view.addSubview(searchBar)
-        searchBar.snp.makeConstraints { search in
-            search.top.equalToSuperview().offset(60)
-            search.left.right.equalToSuperview()
-        }
-        searchBar.delegate = self
-        searchBar.placeholder = "Search..."
-        searchBar.showsCancelButton = false
+       
+       
         
         
         
@@ -51,7 +45,7 @@ extension MessageController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! TableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! MessageTableViewCell
         
         cell.layer.borderColor = UIColor.red.cgColor
         cell.layer.borderWidth = 2.0
@@ -63,10 +57,6 @@ extension MessageController: UITableViewDelegate, UITableViewDataSource {
         return 50
     }
     
-    
-}
-
-extension MessageController: UISearchBarDelegate {
     
 }
 

@@ -12,6 +12,6 @@ import SnapKit
 
 
 
-class TableViewCell: UITableViewCell {
+class MessageTableViewCell: UITableViewCell {
     
 }
