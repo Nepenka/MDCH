@@ -16,7 +16,6 @@ class SettingController: UIViewController {
     let editButton = CustomButton(title: "Edit", hasBackground: false, fontSize: .small)
     let nameLabel = CustomLabel(text: "default_name" , textColor: .black, fontSize: .big, fontStyle: .bold)
     let avatarImage = UIImageView(image: UIImage(named: "default_image"))
-   // let defaultAvatar = UIImage(named: "default_image")
     var onUsernameReceived: ((String) -> Void)?
     
     

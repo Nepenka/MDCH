@@ -15,6 +15,7 @@
 		9D64D2602BA9D74D00157E44 /* RegisterUserRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D64D25F2BA9D74D00157E44 /* RegisterUserRequest.swift */; };
 		9D64D2622BA9DC8F00157E44 /* LoginUserRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D64D2612BA9DC8F00157E44 /* LoginUserRequest.swift */; };
 		9D64D2642BA9F4D100157E44 /* Validator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D64D2632BA9F4D100157E44 /* Validator.swift */; };
+		9D6EAE6B2BB490220066573C /* EditUsersSettingsControllerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6EAE6A2BB490220066573C /* EditUsersSettingsControllerCell.swift */; };
 		9D7029E02BA84D4F0007DF10 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7029DF2BA84D4F0007DF10 /* AlertManager.swift */; };
 		9D7D08CA2BAF26DF001A318E /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7D08C92BAF26DF001A318E /* MessageTableViewCell.swift */; };
 		9DA3D5C32B80D6430025466C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA3D5C22B80D6430025466C /* AppDelegate.swift */; };
@@ -51,6 +52,7 @@
 		9D64D25F2BA9D74D00157E44 /* RegisterUserRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterUserRequest.swift; sourceTree = "<group>"; };
 		9D64D2612BA9DC8F00157E44 /* LoginUserRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginUserRequest.swift; sourceTree = "<group>"; };
 		9D64D2632BA9F4D100157E44 /* Validator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validator.swift; sourceTree = "<group>"; };
+		9D6EAE6A2BB490220066573C /* EditUsersSettingsControllerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditUsersSettingsControllerCell.swift; sourceTree = "<group>"; };
 		9D7029DF2BA84D4F0007DF10 /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 		9D7D08C92BAF26DF001A318E /* MessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
 		9DA3D5BF2B80D6430025466C /* MDCH.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MDCH.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -126,6 +128,7 @@
 				9D7D08C92BAF26DF001A318E /* MessageTableViewCell.swift */,
 				9D509DF52BB3142C003443B4 /* NewsTableViewCell.swift */,
 				9D509DF72BB33083003443B4 /* SettingControllerTableViewCell.swift */,
+				9D6EAE6A2BB490220066573C /* EditUsersSettingsControllerCell.swift */,
 				9DA3D5EF2B80DC4E0025466C /* Views */,
 				9DA3D5EA2B80D9CB0025466C /* Controllers */,
 				9DA3D5E92B80D9B30025466C /* Application */,
@@ -276,6 +279,7 @@
 				9D509DF62BB3142C003443B4 /* NewsTableViewCell.swift in Sources */,
 				9DBB90A52B80F01500BB24A5 /* CustomButton.swift in Sources */,
 				9DB8C5FE2BAF8C3B00A3E4D9 /* MessageController.swift in Sources */,
+				9D6EAE6B2BB490220066573C /* EditUsersSettingsControllerCell.swift in Sources */,
 				9DA3D5C32B80D6430025466C /* AppDelegate.swift in Sources */,
 				9DD6F7D32BB0BAB8000C682B /* CustomLabel.swift in Sources */,
 				9DA3D5E72B80D9790025466C /* LoginController.swift in Sources */,

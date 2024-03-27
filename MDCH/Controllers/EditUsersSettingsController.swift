@@ -10,7 +10,7 @@ import SnapKit
 import Firebase
 import FirebaseFirestore
 
-class EditUsersSettingsController: UIViewController {
+class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
     
     let nameUserSettingField = CustomTextField(authFieldType: .username)
     let editAvatrButton = CustomButton(title: "Edit Photo", hasBackground: false ,fontSize: .small)
@@ -21,6 +21,8 @@ class EditUsersSettingsController: UIViewController {
     let cancelButton = CustomButton(title: "Cancel", hasBackground: false ,fontSize: .small)
     var onUsernameReceived: ((String) -> Void)?
     var onSave: ((String) -> Void)?
+    let tableView = UITableView()
+    let exitButton = CustomButton(title: "Exit",hasBackground: true ,fontSize: .big)
     
     private lazy var settingScrollView: UIScrollView = {
      let scrollView = UIScrollView()
@@ -50,7 +52,29 @@ class EditUsersSettingsController: UIViewController {
         clearButton.addTarget(self, action: #selector(clearButtonAction), for: .touchUpInside)
         doneButton.addTarget(self, action: #selector(doneButtonAction), for: .touchUpInside)
         cancelButton.addTarget(self, action: #selector(cancelButtonAction), for: .touchUpInside)
+        exitButton.addTarget(self, action: #selector(exitButtonAction), for: .touchUpInside)
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(EditUsersSettingsControllerCell.self, forCellReuseIdentifier: "cell")
+        nameUserSettingField.delegate = self
+        
     }
+    
+    //Метод обновления видимости кнопки при проявлении экрана -> Надо запомнить
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        updateClearButtonVisibility()
+    }
+    
+    @objc func textFieldDidChangeSelection(_ textField: UITextField) {
+        updateClearButtonVisibility()
+        
+    }
+    
+    private func updateClearButtonVisibility() {
+        clearButton.isHidden = nameUserSettingField.text?.isEmpty ?? true
+    }
+    
     
     private func setupUI() {
         view.addSubview(settingScrollView)
@@ -61,6 +85,8 @@ class EditUsersSettingsController: UIViewController {
         contentView.addSubview(clearButton)
         contentView.addSubview(doneButton)
         contentView.addSubview(cancelButton)
+        contentView.addSubview(tableView)
+        contentView.addSubview(exitButton)
         
         doneButton.snp.makeConstraints { done in
             done.right.equalTo(contentView.snp.right).offset(-15)
@@ -83,7 +109,7 @@ class EditUsersSettingsController: UIViewController {
         
         nameUserSettingField.snp.makeConstraints { nameField in
             nameField.top.equalTo(editAvatrButton.snp.bottom).offset(30)
-            nameField.left.right.equalToSuperview().inset(40)
+            nameField.left.right.equalToSuperview().inset(25)
             nameField.height.equalTo(50)
         }
         
@@ -101,6 +127,21 @@ class EditUsersSettingsController: UIViewController {
             cancel.top.equalTo(contentView.snp.top).offset(5)
         }
         
+        tableView.snp.makeConstraints { table in
+            table.top.equalTo(nameUserSettingField.snp.bottom).offset(65)
+            table.right.left.bottom.equalToSuperview()
+        }
+        
+        exitButton.snp.makeConstraints { exit in
+            exit.top.equalTo(tableView.snp.bottom).offset(-100)
+            exit.left.right.equalToSuperview().inset(35)
+            exit.height.equalTo(55)
+        }
+        
+        exitButton.layer.borderColor = UIColor.red.cgColor
+        exitButton.layer.borderWidth = 1.0
+        
+        
         
     }
     
@@ -116,12 +157,35 @@ class EditUsersSettingsController: UIViewController {
         let username = nameUserSettingField.text ?? ""
         onUsernameReceived?(username)
         navigationController?.popViewController(animated: true)
-        
     }
     
     @objc func cancelButtonAction() {
-        
         navigationController?.popViewController(animated: true)
     }
+    
+    
+    @objc func exitButtonAction() {
+        print("Кнопка работает")
+        
+    }
+    
+}
+
+
+extension EditUsersSettingsController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 2
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! EditUsersSettingsControllerCell
+        
+       
+        
+        cell.layer.borderWidth = 0.5
+        
+        return cell
+    }
+    
     
 }
