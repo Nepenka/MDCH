@@ -7,14 +7,18 @@
 
 import UIKit
 import SnapKit
+import Firebase
+import FirebaseFirestore
 
 
 class SettingController: UIViewController {
     
     let editButton = CustomButton(title: "Edit", hasBackground: false, fontSize: .small)
-    let nameLabel = CustomLabel(text: "Жопа" , textColor: .black, fontSize: .big, fontStyle: .bold)
+    let nameLabel = CustomLabel(text: "default_name" , textColor: .black, fontSize: .big, fontStyle: .bold)
     let avatarImage = UIImageView(image: UIImage(named: "default_image"))
    // let defaultAvatar = UIImage(named: "default_image")
+    var onUsernameReceived: ((String) -> Void)?
+    
     
     private lazy var settingScrollView: UIScrollView = {
      let scrollView = UIScrollView()
@@ -40,15 +44,32 @@ class SettingController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white //UIColor(red: 255/255, green: 192/255, blue: 203/255, alpha: 1)
+        view.backgroundColor = .white 
         setupUI()
         editButton.addTarget(self, action: #selector(editButtonAction), for: .touchUpInside)
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(SettingControllerTableViewCell.self, forCellReuseIdentifier: "cell")
         settingScrollView.showsVerticalScrollIndicator = false
+        readUserNameFromFirebase()
     }
     
+    
+     func readUserNameFromFirebase() {
+        let userCollectionRef = Firestore.firestore().collection("users")
+        
+        if let currentUserUID = Auth.auth().currentUser?.uid {
+            userCollectionRef.document(currentUserUID).getDocument { (document, error)in
+                if let document = document, document.exists {
+                    if let username = document.data()?["username"] as? String {
+                        self.nameLabel.text = username
+                    }
+                } else {
+                    print("Документ не найден")
+                }
+            }
+        }
+    }
    
     
     private func setupUI() {
@@ -87,8 +108,10 @@ class SettingController: UIViewController {
     
     @objc func editButtonAction() {
         let vc = EditUsersSettingsController()
+        vc.onSave = { [weak self] newName in
+                self?.nameLabel.text = newName
+            }
         navigationController?.pushViewController(vc, animated: true)
-        
     }
 }
 
