@@ -46,9 +46,6 @@ class SettingController: UIViewController {
         view.backgroundColor = .white 
         setupUI()
         editButton.addTarget(self, action: #selector(editButtonAction), for: .touchUpInside)
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(SettingControllerTableViewCell.self, forCellReuseIdentifier: "cell")
         settingScrollView.showsVerticalScrollIndicator = false
         readUserNameFromFirebase()
     }
@@ -63,6 +60,7 @@ class SettingController: UIViewController {
                     if let username = document.data()?["username"] as? String {
                         self.nameLabel.text = username
                     }
+                    
                 } else {
                     print("Документ не найден")
                 }
@@ -98,10 +96,6 @@ class SettingController: UIViewController {
             name.centerX.equalToSuperview()
         }
         
-        tableView.snp.makeConstraints { table in
-            table.top.equalTo(nameLabel.snp.bottom).offset(35)
-            table.right.left.bottom.equalToSuperview()
-        }
     }
 
     
@@ -110,25 +104,12 @@ class SettingController: UIViewController {
         vc.onSave = { [weak self] newName in
                 self?.nameLabel.text = newName
             }
+        
+        vc.onUpdateAvatar = { [weak self] newImage in
+                self?.avatarImage.image = newImage
+            }
         navigationController?.pushViewController(vc, animated: true)
     }
 }
 
 
-extension SettingController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! SettingControllerTableViewCell
-        
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 55
-    }
-    
-    
-}

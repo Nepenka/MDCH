@@ -9,20 +9,27 @@ import UIKit
 import SnapKit
 import Firebase
 import FirebaseFirestore
+import FirebaseStorage
+import AVFoundation
 
 class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
     
     let nameUserSettingField = CustomTextField(authFieldType: .username)
     let editAvatrButton = CustomButton(title: "Edit Photo", hasBackground: false ,fontSize: .small)
-    let avatarImage = UIImageView(image: UIImage(named: "default_image"))
+    var avatarImage = UIImageView(image: UIImage(named: "default_image"))
     let clearButton = UIButton(type: .custom)
     let clearImage = UIImage(systemName: "multiply.circle.fill")
     let doneButton = CustomButton(title: "Done", hasBackground: false ,fontSize: .small)
     let cancelButton = CustomButton(title: "Cancel", hasBackground: false ,fontSize: .small)
     var onUsernameReceived: ((String) -> Void)?
     var onSave: ((String) -> Void)?
+    var onUpdateAvatar: ((UIImage) -> Void)?
     let tableView = UITableView()
     let exitButton = CustomButton(title: "Exit",hasBackground: true ,fontSize: .big)
+    var username = ""
+    var email = ""
+    let imagePicker = UIImagePickerController()
+    
     
     private lazy var settingScrollView: UIScrollView = {
      let scrollView = UIScrollView()
@@ -53,17 +60,20 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
         doneButton.addTarget(self, action: #selector(doneButtonAction), for: .touchUpInside)
         cancelButton.addTarget(self, action: #selector(cancelButtonAction), for: .touchUpInside)
         exitButton.addTarget(self, action: #selector(exitButtonAction), for: .touchUpInside)
+        editAvatrButton.addTarget(self, action: #selector(editAvatrButtonAction), for: .touchUpInside)
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(EditUsersSettingsControllerCell.self, forCellReuseIdentifier: "cell")
         nameUserSettingField.delegate = self
-        
+        loadInfoFromFirebase()
+        imagePicker.delegate = self
     }
     
-    //Метод обновления видимости кнопки при проявлении экрана -> Надо запомнить
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updateClearButtonVisibility()
+        loadInfoFromFirebase()
     }
     
     @objc func textFieldDidChangeSelection(_ textField: UITextField) {
@@ -74,6 +84,105 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
     private func updateClearButtonVisibility() {
         clearButton.isHidden = nameUserSettingField.text?.isEmpty ?? true
     }
+    
+    func loadInfoFromFirebase() {
+        let userCollectionRef = Firestore.firestore().collection("users")
+        
+        if let currentUserUID = Auth.auth().currentUser?.uid {
+            userCollectionRef.document(currentUserUID).getDocument { (document, error)in
+                if let document = document, document.exists {
+                    if let username = document.data()?["username"] as? String {
+                        self.username = username
+                    }
+                    if let email = document.data()?["email"] as? String {
+                        self.email = email
+                    }
+                    if let avatarURL = document.data()?["avatarURL"] as? String {
+                        URLSession.shared.dataTask(with: (URL(string: avatarURL)!)) { [weak self] (data, response, error) in
+                            if let error = error {
+                                print(error.localizedDescription)
+                                return
+                            }
+                            
+                            guard let data = data, let image = UIImage(data: data) else {
+                                print("Ошибка при конвертации данных в изображении")
+                                return
+                            }
+                            
+                            DispatchQueue.main.async {
+                                self?.avatarImage.image = image
+                                self?.onUpdateAvatar?(image)
+                            }
+                        }.resume()
+                        
+                    }
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
+                } else {
+                    print("Документ не найден")
+                }
+            }
+        }
+    }
+    
+    func uploadImageToFirebase(image: UIImage) {
+        guard let imageData = image.jpegData(compressionQuality: 0.5) else {
+            print("Ошибка при конвертации")
+            return
+        }
+        
+        let storageRef = Storage.storage().reference().child("avatars").child("\(UUID().uuidString).jpg")
+        
+        storageRef.putData(imageData, metadata: nil) { (metadata, error) in
+            guard let _ = metadata else {
+                print("Ошибка загрузки: \(error?.localizedDescription)")
+                return
+            }
+            
+            storageRef.downloadURL { (url, error) in
+                guard let downloadURL = url else {
+                    print("Ошибка при получении URL загруженного изображения: \(error?.localizedDescription)")
+                    return
+                }
+                self.saveImageURLToFirestore(imageURL: downloadURL.absoluteString)
+            }
+        }
+    }
+
+    
+    func saveImageURLToFirestore(imageURL: String) {
+        if let currentUserUID = Auth.auth().currentUser?.uid {
+            let userRef = Firestore.firestore().collection("users").document(currentUserUID)
+            userRef.updateData(["avatarURL": imageURL]) { error in
+                if let error = error {
+                    print("Ошибка при обновлении информации о пользователе: \(error.localizedDescription)")
+                } else {
+                    print("Изображение успешно загружено и сохранено")
+                    self.loadInfoFromFirebase()
+                    if let url = URL(string: imageURL) {
+                        URLSession.shared.dataTask(with: url) { data, response, error in
+                            if let error = error {
+                                print("Ошибка при загрузке изображения: \(error.localizedDescription)")
+                                return
+                            }
+                            
+                            guard let data = data, let image = UIImage(data: data) else {
+                                print("Невозможно преобразовать данные в изображение")
+                                return
+                            }
+                            
+                            DispatchQueue.main.async {
+                                self.avatarImage.image = image
+                            }
+                        }.resume()
+                    }
+                }
+            }
+        }
+    }
+
+
     
     
     private func setupUI() {
@@ -128,15 +237,17 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
         }
         
         tableView.snp.makeConstraints { table in
-            table.top.equalTo(nameUserSettingField.snp.bottom).offset(65)
-            table.right.left.bottom.equalToSuperview()
+            table.top.equalTo(nameUserSettingField.snp.bottom).offset(85)
+            table.left.right.equalToSuperview()
+            table.bottom.equalTo(exitButton.snp.top).offset(-20)
         }
         
         exitButton.snp.makeConstraints { exit in
-            exit.top.equalTo(tableView.snp.bottom).offset(-100)
+            exit.bottom.equalTo(contentView.snp.bottom).inset(20)
             exit.left.right.equalToSuperview().inset(35)
             exit.height.equalTo(55)
         }
+
         
         exitButton.layer.borderColor = UIColor.red.cgColor
         exitButton.layer.borderWidth = 1.0
@@ -156,6 +267,8 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
         }
         let username = nameUserSettingField.text ?? ""
         onUsernameReceived?(username)
+        
+        
         navigationController?.popViewController(animated: true)
     }
     
@@ -165,9 +278,37 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
     
     
     @objc func exitButtonAction() {
-        print("Кнопка работает")
+        let vc = LoginController()
+        navigationController?.pushViewController(vc, animated: true)
         
     }
+    
+    @objc func editAvatrButtonAction() {
+        print("Edit Photo button tapped")
+        
+        guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
+            print("Camera is not available")
+            return
+        }
+        
+        AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
+            guard granted else {
+                print("Camera access denied")
+                return
+            }
+            
+            DispatchQueue.main.async {
+                self?.showCameraPicker()
+            }
+        }
+    }
+
+    func showCameraPicker() {
+        imagePicker.sourceType = .camera
+        present(imagePicker, animated: true, completion: nil)
+    }
+
+
     
 }
 
@@ -178,14 +319,28 @@ extension EditUsersSettingsController: UITableViewDelegate, UITableViewDataSourc
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! EditUsersSettingsControllerCell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? EditUsersSettingsControllerCell else {return UITableViewCell() }
         
+        if indexPath.row == 0 {
+            cell.textLabel?.text = "Username: \(username)"
+        }else if indexPath.row == 1 {
+            cell.textLabel?.text = "Email: \(email)"
+        }
        
         
         cell.layer.borderWidth = 0.5
         
         return cell
     }
+}
+
+extension EditUsersSettingsController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let pickedImage = info[.originalImage] as? UIImage {
+            uploadImageToFirebase(image: pickedImage)
+        }
+        dismiss(animated: true)
+    }
     
 }

@@ -52,6 +52,10 @@ class RegisterController: UIViewController {
         signInButton.addTarget(self, action: #selector(signInButtonAction), for: .touchUpInside)
         signUpButton.addTarget(self, action: #selector(signUpAction), for: .touchUpInside)
         
+        usernameField.delegate = self
+        emailField.delegate = self
+        passwordField.delegate = self
+        
     }
     
     //MARK: - UI Setup
@@ -188,5 +192,16 @@ extension RegisterController: UITextViewDelegate {
         textView.selectedTextRange = nil
         textView.delegate = self
     }
-    
+}
+
+
+extension RegisterController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+            if textField == emailField {
+                passwordField.becomeFirstResponder()
+            } else if textField == passwordField {
+                textField.resignFirstResponder()
+            }
+            return true
+        }
 }

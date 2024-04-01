@@ -34,11 +34,12 @@ class LoginController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         self.setupUI()
-        
         signInButton.addTarget(self, action: #selector(signInButtonAction), for: .touchUpInside)
         forgotPasswordButton.addTarget(self, action: #selector(forgotButtonAction), for: .touchUpInside)
         newUserButton.addTarget(self, action: #selector(userButtonAction), for: .touchUpInside)
-       
+        navigationItem.hidesBackButton = true
+        emailField.delegate = self
+        passwordField.delegate = self
     }
     
     //MARK: - UI Setup
@@ -136,4 +137,15 @@ class LoginController: UIViewController {
     }
     
     
+}
+
+extension LoginController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == emailField {
+            passwordField.becomeFirstResponder()
+        } else if textField == passwordField {
+            textField.resignFirstResponder()
+        }
+        return true
+    }
 }

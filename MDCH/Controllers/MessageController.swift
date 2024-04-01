@@ -28,6 +28,10 @@ class MessageController: UIViewController {
     
     private func setupUI() {
        
+        view.addSubview(tableView)
+        tableView.snp.makeConstraints { table in
+            table.right.left.top.bottom.equalToSuperview()
+        }
        
         
         

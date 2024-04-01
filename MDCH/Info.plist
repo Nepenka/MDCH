@@ -19,5 +19,7 @@
 			</array>
 		</dict>
 	</dict>
+    <key>NSCameraUsageDescription</key>
+    <string>Для снятия фотографий профиля необходим доступ к камере</string>
 </dict>
 </plist>
