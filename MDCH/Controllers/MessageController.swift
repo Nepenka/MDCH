@@ -32,13 +32,11 @@ class MessageController: UIViewController {
         tableView.snp.makeConstraints { table in
             table.right.left.top.bottom.equalToSuperview()
         }
-       
-        
-        
-        
-        
     }
 }
+
+
+
 
 
 
@@ -49,7 +47,7 @@ extension MessageController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! MessageTableViewCell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? MessageTableViewCell else {return UITableViewCell()}
         
         cell.layer.borderColor = UIColor.red.cgColor
         cell.layer.borderWidth = 2.0
@@ -58,7 +56,7 @@ extension MessageController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 50
+        return 70
     }
     
     

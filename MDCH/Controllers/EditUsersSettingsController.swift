@@ -67,6 +67,7 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
         nameUserSettingField.delegate = self
         loadInfoFromFirebase()
         imagePicker.delegate = self
+        
     }
     
     
@@ -74,6 +75,7 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
         super.viewWillAppear(animated)
         updateClearButtonVisibility()
         loadInfoFromFirebase()
+        
     }
     
     @objc func textFieldDidChangeSelection(_ textField: UITextField) {
@@ -131,15 +133,12 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
             print("Ошибка при конвертации")
             return
         }
-        
         let storageRef = Storage.storage().reference().child("avatars").child("\(UUID().uuidString).jpg")
-        
         storageRef.putData(imageData, metadata: nil) { (metadata, error) in
             guard let _ = metadata else {
                 print("Ошибка загрузки: \(error?.localizedDescription)")
                 return
             }
-            
             storageRef.downloadURL { (url, error) in
                 guard let downloadURL = url else {
                     print("Ошибка при получении URL загруженного изображения: \(error?.localizedDescription)")
@@ -183,8 +182,6 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
     }
 
 
-    
-    
     private func setupUI() {
         view.addSubview(settingScrollView)
         settingScrollView.addSubview(contentView)
@@ -264,10 +261,12 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
         if let enteredText = nameUserSettingField.text, !enteredText.isEmpty {
             let newName = enteredText
             onSave?(newName)
+            if let imageData = avatarImage.image?.jpegData(compressionQuality: 0.5) {
+                SaveInfo.shared.saveDataFirebase(username: username, email: email, newName: newName, onUpdaterImage: imageData)
+            }
         }
         let username = nameUserSettingField.text ?? ""
         onUsernameReceived?(username)
-        
         
         navigationController?.popViewController(animated: true)
     }

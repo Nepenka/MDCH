@@ -18,6 +18,10 @@
 		9D6EAE6B2BB490220066573C /* EditUsersSettingsControllerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6EAE6A2BB490220066573C /* EditUsersSettingsControllerCell.swift */; };
 		9D7029E02BA84D4F0007DF10 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7029DF2BA84D4F0007DF10 /* AlertManager.swift */; };
 		9D7D08CA2BAF26DF001A318E /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7D08C92BAF26DF001A318E /* MessageTableViewCell.swift */; };
+		9D87868F2BCC2E56005582F4 /* SaveInfoModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9D87868D2BCC2E56005582F4 /* SaveInfoModel.xcdatamodeld */; };
+		9D8786912BCC2E87005582F4 /* SaveInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D8786902BCC2E87005582F4 /* SaveInfo.swift */; };
+		9D8786932BCC2F47005582F4 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D8786922BCC2F47005582F4 /* DataManager.swift */; };
+		9D8786952BCD41AC005582F4 /* Rechability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D8786942BCD41AC005582F4 /* Rechability.swift */; };
 		9DA3D5C32B80D6430025466C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA3D5C22B80D6430025466C /* AppDelegate.swift */; };
 		9DA3D5C52B80D6430025466C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA3D5C42B80D6430025466C /* SceneDelegate.swift */; };
 		9DA3D5CC2B80D6450025466C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9DA3D5CB2B80D6450025466C /* Assets.xcassets */; };
@@ -55,6 +59,10 @@
 		9D6EAE6A2BB490220066573C /* EditUsersSettingsControllerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditUsersSettingsControllerCell.swift; sourceTree = "<group>"; };
 		9D7029DF2BA84D4F0007DF10 /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 		9D7D08C92BAF26DF001A318E /* MessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
+		9D87868E2BCC2E56005582F4 /* SaveInfoModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SaveInfoModel.xcdatamodel; sourceTree = "<group>"; };
+		9D8786902BCC2E87005582F4 /* SaveInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveInfo.swift; sourceTree = "<group>"; };
+		9D8786922BCC2F47005582F4 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		9D8786942BCD41AC005582F4 /* Rechability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rechability.swift; sourceTree = "<group>"; };
 		9DA3D5BF2B80D6430025466C /* MDCH.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MDCH.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DA3D5C22B80D6430025466C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9DA3D5C42B80D6430025466C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -102,6 +110,16 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		9D87868C2BCC2DBC005582F4 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				9D87868D2BCC2E56005582F4 /* SaveInfoModel.xcdatamodeld */,
+				9D8786902BCC2E87005582F4 /* SaveInfo.swift */,
+				9D8786922BCC2F47005582F4 /* DataManager.swift */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
 		9DA3D5B62B80D6430025466C = {
 			isa = PBXGroup;
 			children = (
@@ -121,6 +139,7 @@
 		9DA3D5C12B80D6430025466C /* MDCH */ = {
 			isa = PBXGroup;
 			children = (
+				9D87868C2BCC2DBC005582F4 /* CoreData */,
 				9D64D25E2BA9D72F00157E44 /* Models */,
 				9D7029DF2BA84D4F0007DF10 /* AlertManager.swift */,
 				9D64D25C2BA9D64300157E44 /* AuthService.swift */,
@@ -129,6 +148,7 @@
 				9D509DF52BB3142C003443B4 /* NewsTableViewCell.swift */,
 				9D509DF72BB33083003443B4 /* SettingControllerTableViewCell.swift */,
 				9D6EAE6A2BB490220066573C /* EditUsersSettingsControllerCell.swift */,
+				9D8786942BCD41AC005582F4 /* Rechability.swift */,
 				9DA3D5EF2B80DC4E0025466C /* Views */,
 				9DA3D5EA2B80D9CB0025466C /* Controllers */,
 				9DA3D5E92B80D9B30025466C /* Application */,
@@ -285,11 +305,15 @@
 				9DA3D5E72B80D9790025466C /* LoginController.swift in Sources */,
 				9D64D2642BA9F4D100157E44 /* Validator.swift in Sources */,
 				9DBB90A32B80E93700BB24A5 /* CustomTextField.swift in Sources */,
+				9D8786932BCC2F47005582F4 /* DataManager.swift in Sources */,
 				9D64D2602BA9D74D00157E44 /* RegisterUserRequest.swift in Sources */,
+				9D8786912BCC2E87005582F4 /* SaveInfo.swift in Sources */,
 				9D64D2622BA9DC8F00157E44 /* LoginUserRequest.swift in Sources */,
+				9D8786952BCD41AC005582F4 /* Rechability.swift in Sources */,
 				9DA3D5C52B80D6430025466C /* SceneDelegate.swift in Sources */,
 				9D41A69D2BA6357B00B499DD /* WebViewerController.swift in Sources */,
 				9D509DF82BB33083003443B4 /* SettingControllerTableViewCell.swift in Sources */,
+				9D87868F2BCC2E56005582F4 /* SaveInfoModel.xcdatamodeld in Sources */,
 				9DB8C5FC2BAF8C0700A3E4D9 /* NewsController.swift in Sources */,
 				9DA3D5F12B80DC610025466C /* AuthHeaderView.swift in Sources */,
 				9DB8C5F82BAF843B00A3E4D9 /* TabBarController.swift in Sources */,
@@ -554,6 +578,19 @@
 			productName = FirebaseStorage;
 		};
 /* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		9D87868D2BCC2E56005582F4 /* SaveInfoModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				9D87868E2BCC2E56005582F4 /* SaveInfoModel.xcdatamodel */,
+			);
+			currentVersion = 9D87868E2BCC2E56005582F4 /* SaveInfoModel.xcdatamodel */;
+			path = SaveInfoModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 9DA3D5B72B80D6430025466C /* Project object */;
 }
