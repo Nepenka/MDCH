@@ -32,7 +32,7 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
     
     
     private lazy var settingScrollView: UIScrollView = {
-     let scrollView = UIScrollView()
+        let scrollView = UIScrollView()
         scrollView.backgroundColor = .white
         scrollView.frame = view.bounds
         scrollView.contentSize = contentSize
@@ -136,12 +136,12 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
         let storageRef = Storage.storage().reference().child("avatars").child("\(UUID().uuidString).jpg")
         storageRef.putData(imageData, metadata: nil) { (metadata, error) in
             guard let _ = metadata else {
-                print("Ошибка загрузки: \(error?.localizedDescription)")
+                print("Ошибка загрузки: \(error?.localizedDescription ?? "Error")")
                 return
             }
             storageRef.downloadURL { (url, error) in
                 guard let downloadURL = url else {
-                    print("Ошибка при получении URL загруженного изображения: \(error?.localizedDescription)")
+                    print("Ошибка при получении URL загруженного изображения: \(error?.localizedDescription ?? "Error")")
                     return
                 }
                 self.saveImageURLToFirestore(imageURL: downloadURL.absoluteString)

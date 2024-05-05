@@ -18,14 +18,13 @@ class SearchUserController: UIViewController {
         view.backgroundColor = .white
         searchBar.delegate = self
         setupUI()
-       
     }
     
     private func setupUI() {
         view.addSubview(searchBar)
         
         searchBar.snp.makeConstraints { search in
-            search.top.equalToSuperview().offset(60)
+            search.top.equalToSuperview().offset(110)
             search.left.right.equalToSuperview()
         }
         

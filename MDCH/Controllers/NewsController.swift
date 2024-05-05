@@ -60,11 +60,15 @@ class NewsController: UIViewController {
             }
         
         
-        
-        
     }
     
+    
+    //MARK: - написать отдельный класс для функции чтобы нормально настроить textView и не говонокодить!!!
+    
     @objc func postButtonAction() {
+       
+        let vc = PostViewController()
+        navigationController?.present(vc, animated: true)
         
     }
 }

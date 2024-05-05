@@ -27,8 +27,6 @@ class Validator {
     
     static func isPasswordValid(for password: String) -> Bool {
         let password = password.trimmingCharacters(in: .whitespacesAndNewlines)
-        let passwordRegEx = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$#!%*?&]).{6,32}$"
-        let passwordPred = NSPredicate(format: "SELF MATCHES %@", passwordRegEx)
-        return passwordPred.evaluate(with: password)
+        return password.count >= 6 && password.count <= 32
     }
 }

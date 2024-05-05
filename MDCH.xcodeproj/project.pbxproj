@@ -22,6 +22,7 @@
 		9D8786912BCC2E87005582F4 /* SaveInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D8786902BCC2E87005582F4 /* SaveInfo.swift */; };
 		9D8786932BCC2F47005582F4 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D8786922BCC2F47005582F4 /* DataManager.swift */; };
 		9D8786952BCD41AC005582F4 /* Rechability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D8786942BCD41AC005582F4 /* Rechability.swift */; };
+		9DA2D5502BE7F2790090F615 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA2D54F2BE7F2790090F615 /* PostViewController.swift */; };
 		9DA3D5C32B80D6430025466C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA3D5C22B80D6430025466C /* AppDelegate.swift */; };
 		9DA3D5C52B80D6430025466C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA3D5C42B80D6430025466C /* SceneDelegate.swift */; };
 		9DA3D5CC2B80D6450025466C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9DA3D5CB2B80D6450025466C /* Assets.xcassets */; };
@@ -63,6 +64,7 @@
 		9D8786902BCC2E87005582F4 /* SaveInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveInfo.swift; sourceTree = "<group>"; };
 		9D8786922BCC2F47005582F4 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		9D8786942BCD41AC005582F4 /* Rechability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rechability.swift; sourceTree = "<group>"; };
+		9DA2D54F2BE7F2790090F615 /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
 		9DA3D5BF2B80D6430025466C /* MDCH.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MDCH.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DA3D5C22B80D6430025466C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9DA3D5C42B80D6430025466C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -190,6 +192,7 @@
 				9DB8C5FD2BAF8C3B00A3E4D9 /* MessageController.swift */,
 				9DB8C5FF2BAF8C7900A3E4D9 /* SettingController.swift */,
 				9DD6F7D42BB0CCDA000C682B /* EditUsersSettingsController.swift */,
+				9DA2D54F2BE7F2790090F615 /* PostViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -312,6 +315,7 @@
 				9D8786952BCD41AC005582F4 /* Rechability.swift in Sources */,
 				9DA3D5C52B80D6430025466C /* SceneDelegate.swift in Sources */,
 				9D41A69D2BA6357B00B499DD /* WebViewerController.swift in Sources */,
+				9DA2D5502BE7F2790090F615 /* PostViewController.swift in Sources */,
 				9D509DF82BB33083003443B4 /* SettingControllerTableViewCell.swift in Sources */,
 				9D87868F2BCC2E56005582F4 /* SaveInfoModel.xcdatamodeld in Sources */,
 				9DB8C5FC2BAF8C0700A3E4D9 /* NewsController.swift in Sources */,

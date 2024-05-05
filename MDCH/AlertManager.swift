@@ -100,3 +100,16 @@ extension AlertManager {
         self.showBasicAler(on: vc, title: "Unknown Error Fetching User", message: nil)
     }
 }
+
+//MARK: - PostView Mistake
+
+extension AlertManager {
+    public static func showThemeMistake(on vc: UIViewController, with error: Error) {
+        self.showBasicAler(on: vc, title: "Theme Mistake", message: "\(error.localizedDescription)")
+    }
+    
+    public static func showTextViewMistake(on vc: UIViewController, with error: Error) {
+        self.showBasicAler(on: vc, title: "Description Mistake", message: "\(error.localizedDescription)")
+    }
+    
+}
