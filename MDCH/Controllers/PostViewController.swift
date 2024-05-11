@@ -22,6 +22,7 @@ class PostViewController: UIViewController {
     let checkMarkButton = UIButton(type: .custom)
     let checkMarkImage = UIImage(systemName: "checkmark")
     let arrowTriangle = UIImage(systemName: "arrowtriangle.forward.fill")
+    let countSymbol = UILabel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,6 +41,7 @@ class PostViewController: UIViewController {
         view.addSubview(descriptionLabel)
         view.addSubview(checkMarkButton)
         view.addSubview(postButton)
+        view.addSubview(countSymbol)
         
         
         
@@ -97,6 +99,18 @@ class PostViewController: UIViewController {
             button.height.equalTo(50)
         }
         
+        
+        //сделать так чтобы текст не залазил на этот label, и реализовать минимальное количество символов поста и максимальное. Так же реализовать чтобы значение 0 менялось а зависимости оттого сколько символов вписывается 
+        countSymbol.text = "0/128"
+        countSymbol.font = UIFont(name: "Helvetica-Bold", size: 13)
+        countSymbol.textColor = .gray
+        countSymbol.numberOfLines = 1
+        countSymbol.snp.makeConstraints { symbol in
+            symbol.trailing.equalTo(postTextView.snp.trailing).offset(-30)
+            symbol.bottom.equalTo(postTextView.snp.bottom).inset(15)
+            symbol.width.equalTo(35)
+        }
+        
     }
     
     @objc func checkMarkAction() {
@@ -104,7 +118,7 @@ class PostViewController: UIViewController {
     }
     
     @objc func postAction() {
-        //добавить фуннкци онал дл кнпоки post, сохранения данных естетственно которые добавили в textView
+        //добавить фуннкционал дл кнпоки post, сохранения данных естетственно которые добавили в textView и передачи его в tableView
     }
     
     
