@@ -9,7 +9,6 @@ import UIKit
 import SnapKit
 
 
-//В сам textView добавить чтобы можно было вписать минимум 6 символов и максимум n символов. Так же добавить label на сам textView с максимальным количессвтом введёных символов.
 
 
 class PostViewController: UIViewController {
@@ -21,8 +20,9 @@ class PostViewController: UIViewController {
     let postButton = CustomButton(title: "Send", hasBackground: true, fontSize: .medium)
     let checkMarkButton = UIButton(type: .custom)
     let checkMarkImage = UIImage(systemName: "checkmark")
-    let arrowTriangle = UIImage(systemName: "arrowtriangle.forward.fill")
-    let countSymbol = UILabel()
+    let labelSymbol = UILabel()
+    let countSymbol = 500
+    let tapGesture = UITapGestureRecognizer(target: PostViewController.self, action: #selector(dismissKeyboard))
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +31,8 @@ class PostViewController: UIViewController {
         
         checkMarkButton.addTarget(self, action: #selector(checkMarkAction), for: .touchUpInside)
         postButton.addTarget(self, action: #selector(postAction), for: .touchUpInside)
+        view.addGestureRecognizer(tapGesture)
+        postTextView.delegate = self
     }
     
     
@@ -41,7 +43,7 @@ class PostViewController: UIViewController {
         view.addSubview(descriptionLabel)
         view.addSubview(checkMarkButton)
         view.addSubview(postButton)
-        view.addSubview(countSymbol)
+        view.addSubview(labelSymbol)
         
         
         
@@ -89,8 +91,6 @@ class PostViewController: UIViewController {
         }
     
         
-        postButton.tintColor = .white
-        postButton.setImage(arrowTriangle, for: .normal)
         
         postButton.snp.makeConstraints { button in
             button.top.equalTo(postTextView.snp.bottom).offset(20)
@@ -101,12 +101,12 @@ class PostViewController: UIViewController {
         
         
         //сделать так чтобы текст не залазил на этот label, и реализовать минимальное количество символов поста и максимальное. Так же реализовать чтобы значение 0 менялось а зависимости оттого сколько символов вписывается 
-        countSymbol.text = "0/128"
-        countSymbol.font = UIFont(name: "Helvetica-Bold", size: 13)
-        countSymbol.textColor = .gray
-        countSymbol.numberOfLines = 1
-        countSymbol.snp.makeConstraints { symbol in
-            symbol.trailing.equalTo(postTextView.snp.trailing).offset(-30)
+        labelSymbol.text = "0/500"
+        labelSymbol.font = UIFont(name: "Helvetica-Bold", size: 13)
+        labelSymbol.textColor = .gray
+        labelSymbol.numberOfLines = 0
+        labelSymbol.snp.makeConstraints { symbol in
+            symbol.trailing.equalTo(postTextView.snp.trailing).offset(-35)
             symbol.bottom.equalTo(postTextView.snp.bottom).inset(15)
             symbol.width.equalTo(35)
         }
@@ -114,12 +114,40 @@ class PostViewController: UIViewController {
     }
     
     @objc func checkMarkAction() {
-        //добавить функционал для кнопки чека, по нажатию на нее было сохранение темы
+        if let text = titleTextField.text, !text.isEmpty {
+            //Здесь надо будеть сделать так что при нажатии на кнопку checkMarkAction название темы переходил в название CollectionView
+            
+            postTextView.becomeFirstResponder()
+        } else {
+            AlertManager.showThemeMistake(on: self)
+        }
     }
     
     @objc func postAction() {
-        //добавить фуннкционал дл кнпоки post, сохранения данных естетственно которые добавили в textView и передачи его в tableView
+        if let descriptionText = postTextView.text, !descriptionText.isEmpty {
+            //Здесь надо будеть сделать так что при нажатии на кнопку checkMarkAction название темы переходил в название CollectionView и закрытие это окна и переход к посту в CollectionView
+            
+        } else {
+            AlertManager.showDescriptionMistake(on: self)
+        }
     }
     
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
+}
+
+
+extension PostViewController: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        let characterCount = textView.text.count
+        labelSymbol.text = "\(characterCount)/\(countSymbol)"
+    }
     
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        guard let newText = textView.text as NSString? else {return true}
+        let updateText = newText.replacingCharacters(in: range, with: text)
+        
+        return updateText.count < countSymbol
+    }
 }

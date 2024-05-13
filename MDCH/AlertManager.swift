@@ -104,12 +104,11 @@ extension AlertManager {
 //MARK: - PostView Mistake
 
 extension AlertManager {
-    public static func showThemeMistake(on vc: UIViewController, with error: Error) {
-        self.showBasicAler(on: vc, title: "Theme Mistake", message: "\(error.localizedDescription)")
+    public static func showThemeMistake(on vc: UIViewController) {
+        self.showBasicAler(on: vc, title: "Theme Mistake", message: "You should get name of theme, or tap on check mark")
     }
     
-    public static func showTextViewMistake(on vc: UIViewController, with error: Error) {
-        self.showBasicAler(on: vc, title: "Description Mistake", message: "\(error.localizedDescription)")
+    public static func showDescriptionMistake(on vc: UIViewController) {
+        self.showBasicAler(on: vc, title: "Description Mistake", message: "You should wrote anyone on Description!")
     }
-    
 }

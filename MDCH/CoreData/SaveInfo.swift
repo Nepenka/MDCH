@@ -25,7 +25,7 @@ class SaveInfo {
     }()
     
     func saveDataFirebase(username: String, email: String, newName: String, onUpdaterImage: Data) {
-        let context = persistentContainer.viewContext
+        let context = persistentContainer.newBackgroundContext()
         
         context.perform {
             let saveInfoFromFirebase = SaveInfoFromFirebase(context: context)
@@ -36,8 +36,8 @@ class SaveInfo {
         }
         
         do {
-           try context.save()
-            print("Данные успешно сохранены в Core Data")
+                try context.save()
+                print("Данные успешно сохранены в Core Data")
         }catch {
              print("Error saving: \(error)")
         }

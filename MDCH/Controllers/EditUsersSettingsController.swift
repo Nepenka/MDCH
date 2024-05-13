@@ -87,7 +87,7 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
         clearButton.isHidden = nameUserSettingField.text?.isEmpty ?? true
     }
     
-    func loadInfoFromFirebase() {
+   private func loadInfoFromFirebase() {
         let userCollectionRef = Firestore.firestore().collection("users")
         
         if let currentUserUID = Auth.auth().currentUser?.uid {
@@ -213,6 +213,7 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
             editButton.centerX.equalToSuperview()
         }
         
+        
         nameUserSettingField.snp.makeConstraints { nameField in
             nameField.top.equalTo(editAvatrButton.snp.bottom).offset(30)
             nameField.left.right.equalToSuperview().inset(25)
@@ -261,10 +262,15 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
         if let enteredText = nameUserSettingField.text, !enteredText.isEmpty {
             let newName = enteredText
             onSave?(newName)
+            //SaveInfo.shared.saveDataFirebase(username: username, email: email, newName: newName, onUpdaterImage: ) сохранение данных в CoreData, подумать над тем надо ли оно или нет!
+            /*
             if let imageData = avatarImage.image?.jpegData(compressionQuality: 0.5) {
                 SaveInfo.shared.saveDataFirebase(username: username, email: email, newName: newName, onUpdaterImage: imageData)
             }
+            */
         }
+        
+        
         let username = nameUserSettingField.text ?? ""
         onUsernameReceived?(username)
         
