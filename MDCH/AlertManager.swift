@@ -111,4 +111,8 @@ extension AlertManager {
     public static func showDescriptionMistake(on vc: UIViewController) {
         self.showBasicAler(on: vc, title: "Description Mistake", message: "You should wrote anyone on Description!")
     }
+    
+    public static func showButtonMistake(on vc: UIViewController) {
+        self.showBasicAler(on: vc, title: "Them Mistake", message: "You should tap on check mark")
+    }
 }

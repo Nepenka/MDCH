@@ -23,6 +23,7 @@ class PostViewController: UIViewController {
     let labelSymbol = UILabel()
     let countSymbol = 500
     let tapGesture = UITapGestureRecognizer(target: PostViewController.self, action: #selector(dismissKeyboard))
+    var isCheckMarkButton = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -93,7 +94,7 @@ class PostViewController: UIViewController {
         
         
         postButton.snp.makeConstraints { button in
-            button.top.equalTo(postTextView.snp.bottom).offset(20)
+            button.top.equalTo(postTextView.snp.bottom).offset(45)
             button.right.equalToSuperview().offset(-35)
             button.left.equalToSuperview().inset(170)
             button.height.equalTo(50)
@@ -104,11 +105,12 @@ class PostViewController: UIViewController {
         labelSymbol.text = "0/500"
         labelSymbol.font = UIFont(name: "Helvetica-Bold", size: 13)
         labelSymbol.textColor = .gray
-        labelSymbol.numberOfLines = 0
+        labelSymbol.textAlignment = .right
+        labelSymbol.sizeToFit()
         labelSymbol.snp.makeConstraints { symbol in
-            symbol.trailing.equalTo(postTextView.snp.trailing).offset(-35)
-            symbol.bottom.equalTo(postTextView.snp.bottom).inset(15)
-            symbol.width.equalTo(35)
+            symbol.trailing.equalTo(postTextView.snp.trailing).offset(-20)
+            symbol.bottom.equalTo(postTextView.snp.bottom).inset(-25)
+            symbol.width.equalTo(45)
         }
         
     }
@@ -126,8 +128,15 @@ class PostViewController: UIViewController {
     @objc func postAction() {
         if let descriptionText = postTextView.text, !descriptionText.isEmpty {
             //Здесь надо будеть сделать так что при нажатии на кнопку checkMarkAction название темы переходил в название CollectionView и закрытие это окна и переход к посту в CollectionView
+            //dismissKeyboard()
+            if isCheckMarkButton {
+                //Здесь надо будеть сделать так что при нажатии на кнопку checkMarkAction название темы переходил в название CollectionView и закрытие это окна и переход к посту в CollectionView
+                //dismissKeyboard()
+            } else {
+                AlertManager.showButtonMistake(on: self)
+            }
             
-        } else {
+            }else {
             AlertManager.showDescriptionMistake(on: self)
         }
     }

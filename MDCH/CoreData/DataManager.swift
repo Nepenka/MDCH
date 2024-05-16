@@ -10,8 +10,5 @@ import CoreData
 
 
 class DataManager: NSManagedObject, Encodable {
-    @NSManaged var email: String
-    @NSManaged var username: String
     @NSManaged var newName: String
-    @NSManaged var onUpdaterImage: Data
 }

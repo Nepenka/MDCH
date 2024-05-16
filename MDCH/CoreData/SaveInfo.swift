@@ -24,15 +24,12 @@ class SaveInfo {
         return container
     }()
     
-    func saveDataFirebase(username: String, email: String, newName: String, onUpdaterImage: Data) {
+    func saveNewUserName(newName: String) {
         let context = persistentContainer.newBackgroundContext()
         
         context.perform {
             let saveInfoFromFirebase = SaveInfoFromFirebase(context: context)
-            saveInfoFromFirebase.username = username
-            saveInfoFromFirebase.email = email
             saveInfoFromFirebase.newName = newName
-            saveInfoFromFirebase.onUpdaterImage = onUpdaterImage
         }
         
         do {

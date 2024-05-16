@@ -262,12 +262,7 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
         if let enteredText = nameUserSettingField.text, !enteredText.isEmpty {
             let newName = enteredText
             onSave?(newName)
-            //SaveInfo.shared.saveDataFirebase(username: username, email: email, newName: newName, onUpdaterImage: ) сохранение данных в CoreData, подумать над тем надо ли оно или нет!
-            /*
-            if let imageData = avatarImage.image?.jpegData(compressionQuality: 0.5) {
-                SaveInfo.shared.saveDataFirebase(username: username, email: email, newName: newName, onUpdaterImage: imageData)
-            }
-            */
+            //SaveInfo.shared.saveNewUserName(newName: newName) сохранение в coredata есть, но не берет данные из coreData. 
         }
         
         
