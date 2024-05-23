@@ -75,6 +75,7 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
         super.viewWillAppear(animated)
         updateClearButtonVisibility()
         loadInfoFromFirebase()
+        loadUserFromCoreData()
         
     }
     
@@ -180,6 +181,12 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
             }
         }
     }
+    
+    private func loadUserFromCoreData() {
+        let savedUsername = SaveInfo.shared.loadUserName()
+        let username = savedUsername
+        nameUserSettingField.text = savedUsername
+    }
 
 
     private func setupUI() {
@@ -262,7 +269,7 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
         if let enteredText = nameUserSettingField.text, !enteredText.isEmpty {
             let newName = enteredText
             onSave?(newName)
-            //SaveInfo.shared.saveNewUserName(newName: newName) сохранение в coredata есть, но не берет данные из coreData. 
+            SaveInfo.shared.saveNewUserName(newName: newName)
         }
         
         

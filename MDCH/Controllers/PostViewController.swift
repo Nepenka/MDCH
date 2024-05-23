@@ -22,7 +22,7 @@ class PostViewController: UIViewController {
     let checkMarkImage = UIImage(systemName: "checkmark")
     let labelSymbol = UILabel()
     let countSymbol = 500
-    let tapGesture = UITapGestureRecognizer(target: PostViewController.self, action: #selector(dismissKeyboard))
+    lazy var tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
     var isCheckMarkButton = false
     
     override func viewDidLoad() {
@@ -119,6 +119,7 @@ class PostViewController: UIViewController {
         if let text = titleTextField.text, !text.isEmpty {
             //Здесь надо будеть сделать так что при нажатии на кнопку checkMarkAction название темы переходил в название CollectionView
             
+            isCheckMarkButton = true
             postTextView.becomeFirstResponder()
         } else {
             AlertManager.showThemeMistake(on: self)
@@ -131,7 +132,8 @@ class PostViewController: UIViewController {
             //dismissKeyboard()
             if isCheckMarkButton {
                 //Здесь надо будеть сделать так что при нажатии на кнопку checkMarkAction название темы переходил в название CollectionView и закрытие это окна и переход к посту в CollectionView
-                //dismissKeyboard()
+                dismissKeyboard()
+                
             } else {
                 AlertManager.showButtonMistake(on: self)
             }

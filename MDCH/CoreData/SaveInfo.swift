@@ -25,18 +25,35 @@ class SaveInfo {
     }()
     
     func saveNewUserName(newName: String) {
-        let context = persistentContainer.newBackgroundContext()
-        
-        context.perform {
-            let saveInfoFromFirebase = SaveInfoFromFirebase(context: context)
-            saveInfoFromFirebase.newName = newName
-        }
+        let context = persistentContainer.viewContext
+        let fetchRequest: NSFetchRequest<SaveInfoFromFirebase> = SaveInfoFromFirebase.fetchRequest()
         
         do {
-                try context.save()
-                print("Данные успешно сохранены в Core Data")
-        }catch {
-             print("Error saving: \(error)")
+            let results = try context.fetch(fetchRequest)
+            if let userInfo = results.first {
+                userInfo.newName = newName
+            } else {
+                let newUser = SaveInfoFromFirebase(context: context)
+                newUser.newName = newName
+            }
+            
+            try context.save()
+            print("Данные успешно сохранены в Core Data")
+        } catch {
+            print("Error saving: \(error)")
+        }
+    }
+    
+    func loadUserName() -> String {
+        let context = persistentContainer.viewContext
+        let fetchRequest: NSFetchRequest<SaveInfoFromFirebase> = SaveInfoFromFirebase.fetchRequest()
+        
+        do {
+            let results = try context.fetch(fetchRequest)
+            return results.first?.newName ?? "default_name"
+        } catch {
+            print("Ошибка при загрузке имени пользователя: \(error)")
+            return "default_name"
         }
     }
 }
