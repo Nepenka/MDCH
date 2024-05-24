@@ -105,14 +105,14 @@ extension AlertManager {
 
 extension AlertManager {
     public static func showThemeMistake(on vc: UIViewController) {
-        self.showBasicAler(on: vc, title: "Theme Mistake", message: "You should get name of theme, or tap on check mark")
+        self.showBasicAler(on: vc, title: "Theme Mistake", message: "You must write the name of your topic.")
     }
     
     public static func showDescriptionMistake(on vc: UIViewController) {
-        self.showBasicAler(on: vc, title: "Description Mistake", message: "You should wrote anyone on Description!")
+        self.showBasicAler(on: vc, title: "Description Mistake", message: "You should write something in Description.")
     }
     
     public static func showButtonMistake(on vc: UIViewController) {
-        self.showBasicAler(on: vc, title: "Them Mistake", message: "You should tap on check mark")
+        self.showBasicAler(on: vc, title: "Them Mistake", message: "You should tap on check mark.")
     }
 }

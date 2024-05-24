@@ -18,7 +18,8 @@ class RegisterController: UIViewController {
     private let passwordField = CustomTextField(authFieldType: .password)
     private let signInButton = CustomButton(title: "Already have an account? Sign In.", hasBackground: false, fontSize: .small)
     private let signUpButton = CustomButton(title: "Sign Up", hasBackground: true, fontSize: .big)
-    
+    lazy var tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+
     private let termsTextView: UITextView = {
         let attributedString = NSMutableAttributedString(string: "By creating an account,you agree to our Terms & Conditions and you knowledge that you have read our Privacy Policy.")
         attributedString.addAttribute(.link, value: "terms://termsAndConditions", range: (attributedString.string as NSString).range(of: "Terms & Conditions"))
@@ -48,6 +49,8 @@ class RegisterController: UIViewController {
         view.backgroundColor = .white
         self.setupUI()
         self.termsTextView.delegate = self
+        view.addGestureRecognizer(tapGesture)
+
         
         signInButton.addTarget(self, action: #selector(signInButtonAction), for: .touchUpInside)
         signUpButton.addTarget(self, action: #selector(signUpAction), for: .touchUpInside)
@@ -165,6 +168,10 @@ class RegisterController: UIViewController {
     
     @objc func signInButtonAction() {
         self.navigationController?.popToRootViewController(animated: true)
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
     
 }

@@ -44,16 +44,4 @@ class SaveInfo {
         }
     }
     
-    func loadUserName() -> String {
-        let context = persistentContainer.viewContext
-        let fetchRequest: NSFetchRequest<SaveInfoFromFirebase> = SaveInfoFromFirebase.fetchRequest()
-        
-        do {
-            let results = try context.fetch(fetchRequest)
-            return results.first?.newName ?? "default_name"
-        } catch {
-            print("Ошибка при загрузке имени пользователя: \(error)")
-            return "default_name"
-        }
-    }
 }

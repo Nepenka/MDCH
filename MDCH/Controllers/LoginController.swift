@@ -20,14 +20,14 @@ class LoginController: UIViewController {
     private let signInButton = CustomButton(title: "Sign In", hasBackground: true, fontSize: .big)
     private let newUserButton = CustomButton(title: "New User? Create Account.", hasBackground: false, fontSize: .medium)
     private let forgotPasswordButton = CustomButton(title: "Forgot Password", fontSize: .small)
+    lazy var tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
     
     //MARK: - LifeCycle
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = true
-        
-        
+        view.addGestureRecognizer(tapGesture)
     }
     
     override func viewDidLoad() {
@@ -59,7 +59,7 @@ class LoginController: UIViewController {
         }
         
         emailField.snp.makeConstraints { nameField in
-            nameField.top.equalTo(headerView.snp.bottom).offset(25)
+            nameField.top.equalTo(headerView.snp.bottom).offset(45)
             nameField.centerX.equalTo(headerView.snp.centerX)
             nameField.height.equalTo(55)
             nameField.width.equalToSuperview().multipliedBy(0.85)
@@ -134,6 +134,10 @@ class LoginController: UIViewController {
     @objc func userButtonAction() {
         let vc = RegisterController()
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
     
     

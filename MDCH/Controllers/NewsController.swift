@@ -12,7 +12,7 @@ import SnapKit
 
 class NewsController: UIViewController {
     
-    let postButton: UIButton = .init()
+    let postButton: UIButton = CustomButton(title: "New Post", hasBackground: true, fontSize: .small)
     let tableView = UITableView()
     private lazy var newsScrollView: UIScrollView = {
      let scrollView = UIScrollView()
@@ -47,14 +47,12 @@ class NewsController: UIViewController {
     private func setupUI() {
         view.addSubview(newsScrollView)
         newsScrollView.addSubview(contentView)
-        contentView.addSubview(postButton)
-        
-        postButton.setTitle("Новый пост", for: .normal)
-        postButton.backgroundColor = .systemBlue
+        contentView.addSubview(tableView)
+        view.addSubview(postButton)
         
         postButton.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-                make.centerX.equalTo(newsScrollView)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-20)
+            make.right.equalTo(view).offset(-20)
                 make.width.equalTo(150)
                 make.height.equalTo(50)
             }

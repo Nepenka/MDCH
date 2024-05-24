@@ -16,7 +16,7 @@ class ForgotPasswordController: UIViewController {
     private let headerView = AuthHeaderView(title: "Forgot Password?", subTitle: "Reset your password")
     private let emailField = CustomTextField(authFieldType: .email)
     private let resetPassword = CustomButton(title: "Sign Up",hasBackground: true ,fontSize: .big)
-    
+    lazy var tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
     
     
     
@@ -26,6 +26,7 @@ class ForgotPasswordController: UIViewController {
         view.backgroundColor = .systemBackground
         setupUI()
         self.resetPassword.addTarget(self, action: #selector(resetPasswordAction), for: .touchUpInside)
+        view.addGestureRecognizer(tapGesture)
     }
     
     
@@ -81,5 +82,9 @@ class ForgotPasswordController: UIViewController {
             
             AlertManager.showPasswordResetSend(on: self)
         }
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
 }

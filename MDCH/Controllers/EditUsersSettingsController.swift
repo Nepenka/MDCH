@@ -21,7 +21,6 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
     let clearImage = UIImage(systemName: "multiply.circle.fill")
     let doneButton = CustomButton(title: "Done", hasBackground: false ,fontSize: .small)
     let cancelButton = CustomButton(title: "Cancel", hasBackground: false ,fontSize: .small)
-    var onUsernameReceived: ((String) -> Void)?
     var onSave: ((String) -> Void)?
     var onUpdateAvatar: ((UIImage) -> Void)?
     let tableView = UITableView()
@@ -75,7 +74,6 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
         super.viewWillAppear(animated)
         updateClearButtonVisibility()
         loadInfoFromFirebase()
-        loadUserFromCoreData()
         
     }
     
@@ -92,13 +90,13 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
         let userCollectionRef = Firestore.firestore().collection("users")
         
         if let currentUserUID = Auth.auth().currentUser?.uid {
-            userCollectionRef.document(currentUserUID).getDocument { (document, error)in
+            userCollectionRef.document(currentUserUID).getDocument { [weak self] (document, error)in
                 if let document = document, document.exists {
                     if let username = document.data()?["username"] as? String {
-                        self.username = username
+                        self?.username = username
                     }
                     if let email = document.data()?["email"] as? String {
-                        self.email = email
+                        self?.email = email
                     }
                     if let avatarURL = document.data()?["avatarURL"] as? String {
                         URLSession.shared.dataTask(with: (URL(string: avatarURL)!)) { [weak self] (data, response, error) in
@@ -120,7 +118,7 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
                         
                     }
                     DispatchQueue.main.async {
-                        self.tableView.reloadData()
+                        self?.tableView.reloadData()
                     }
                 } else {
                     print("Документ не найден")
@@ -135,17 +133,17 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
             return
         }
         let storageRef = Storage.storage().reference().child("avatars").child("\(UUID().uuidString).jpg")
-        storageRef.putData(imageData, metadata: nil) { (metadata, error) in
+        storageRef.putData(imageData, metadata: nil) { [weak self] (metadata, error) in
             guard let _ = metadata else {
                 print("Ошибка загрузки: \(error?.localizedDescription ?? "Error")")
                 return
             }
-            storageRef.downloadURL { (url, error) in
+            storageRef.downloadURL { [weak self] (url, error) in
                 guard let downloadURL = url else {
                     print("Ошибка при получении URL загруженного изображения: \(error?.localizedDescription ?? "Error")")
                     return
                 }
-                self.saveImageURLToFirestore(imageURL: downloadURL.absoluteString)
+                self?.saveImageURLToFirestore(imageURL: downloadURL.absoluteString)
             }
         }
     }
@@ -154,14 +152,14 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
     func saveImageURLToFirestore(imageURL: String) {
         if let currentUserUID = Auth.auth().currentUser?.uid {
             let userRef = Firestore.firestore().collection("users").document(currentUserUID)
-            userRef.updateData(["avatarURL": imageURL]) { error in
+            userRef.updateData(["avatarURL": imageURL]) { [weak self] error in
                 if let error = error {
                     print("Ошибка при обновлении информации о пользователе: \(error.localizedDescription)")
                 } else {
                     print("Изображение успешно загружено и сохранено")
-                    self.loadInfoFromFirebase()
+                    self?.loadInfoFromFirebase()
                     if let url = URL(string: imageURL) {
-                        URLSession.shared.dataTask(with: url) { data, response, error in
+                        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
                             if let error = error {
                                 print("Ошибка при загрузке изображения: \(error.localizedDescription)")
                                 return
@@ -173,7 +171,7 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
                             }
                             
                             DispatchQueue.main.async {
-                                self.avatarImage.image = image
+                                self?.avatarImage.image = image
                             }
                         }.resume()
                     }
@@ -182,12 +180,7 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    private func loadUserFromCoreData() {
-        let savedUsername = SaveInfo.shared.loadUserName()
-        let username = savedUsername
-        nameUserSettingField.text = savedUsername
-    }
-
+    
 
     private func setupUI() {
         view.addSubview(settingScrollView)
@@ -268,13 +261,9 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
     @objc func doneButtonAction() {
         if let enteredText = nameUserSettingField.text, !enteredText.isEmpty {
             let newName = enteredText
-            onSave?(newName)
             SaveInfo.shared.saveNewUserName(newName: newName)
+            onSave?(newName)
         }
-        
-        
-        let username = nameUserSettingField.text ?? ""
-        onUsernameReceived?(username)
         
         navigationController?.popViewController(animated: true)
     }
@@ -285,8 +274,9 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
     
     
     @objc func exitButtonAction() {
-        let vc = LoginController()
-        navigationController?.pushViewController(vc, animated: true)
+        let loginVc = LoginController()
+        loginVc.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(loginVc, animated: true)
         
     }
     
