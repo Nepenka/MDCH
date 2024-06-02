@@ -11,29 +11,13 @@ import SnapKit
 
 
 class SearchUserController: UIViewController {
-    let searchBar: UISearchBar = .init()
-       
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        searchBar.delegate = self
-        setupUI()
+        setupNavigationTitle(title: "Search", withSearch: true)
     }
     
-    private func setupUI() {
-        view.addSubview(searchBar)
-        
-        searchBar.snp.makeConstraints { search in
-            search.top.equalToSuperview().offset(110)
-            search.left.right.equalToSuperview()
-        }
-        
-        searchBar.placeholder = "Search..."
-        searchBar.showsCancelButton = false
-    }
-    
-}
-
-extension SearchUserController: UISearchBarDelegate {
     
 }

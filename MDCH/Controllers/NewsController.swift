@@ -13,7 +13,12 @@ import SnapKit
 class NewsController: UIViewController {
     
     let postButton: UIButton = CustomButton(title: "New Post", hasBackground: true, fontSize: .small)
-    let tableView = UITableView()
+    let collectionView: UICollectionView = {
+       let collectionLayout = UICollectionViewFlowLayout()
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionLayout)
+        return collectionView
+    }()
+    
     private lazy var newsScrollView: UIScrollView = {
      let scrollView = UIScrollView()
         scrollView.backgroundColor = .white
@@ -37,53 +42,67 @@ class NewsController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupUI()
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.register(NewsTableViewCell.self, forCellReuseIdentifier: "cell")
         postButton.addTarget(self, action: #selector(postButtonAction), for: .touchUpInside)
         newsScrollView.showsVerticalScrollIndicator = false
+        setupNavigationTitle(title: "Newsfeed", withSearch: false)
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.register(NewsCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
     }
     
     private func setupUI() {
-        view.addSubview(newsScrollView)
-        newsScrollView.addSubview(contentView)
-        contentView.addSubview(tableView)
-        view.addSubview(postButton)
+            view.addSubview(newsScrollView)
+            view.addSubview(postButton)
+            newsScrollView.addSubview(contentView)
+            contentView.addSubview(collectionView)
+            //collectionViewSettings(collectionView)
+            
+            
+            postButton.snp.makeConstraints { make in
+                make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-20)
+                make.right.equalTo(view).offset(-20)
+                    make.width.equalTo(150)
+                    make.height.equalTo(50)
+                }
         
-        postButton.snp.makeConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-20)
-            make.right.equalTo(view).offset(-20)
-                make.width.equalTo(150)
-                make.height.equalTo(50)
+        
+        collectionView.isScrollEnabled = false
+            collectionView.snp.makeConstraints { collection in
+                collection.top.equalToSuperview()
+                collection.left.right.equalToSuperview()
+                collection.bottom.equalTo(postButton.snp.top).offset(-30)
             }
+            
+        }
         
-        
-    }
-    
-    
-    //MARK: - написать отдельный класс для функции чтобы нормально настроить textView и не говонокодить!!!
     
     @objc func postButtonAction() {
        
         let vc = PostViewController()
         navigationController?.present(vc, animated: true)
-        
     }
 }
 
-
-
-extension NewsController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
+extension NewsController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 3
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? NewsTableViewCell else {return UITableViewCell()}
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? NewsCollectionViewCell else {return
+           UICollectionViewCell()
+        }
+        
+        cell.readUserNameFromFirebase()
         
         
-        return cell 
+        return cell
     }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: view.frame.width, height: 200)
+    }
+    
     
     
 }

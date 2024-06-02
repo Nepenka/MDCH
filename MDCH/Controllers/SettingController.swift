@@ -47,6 +47,7 @@ class SettingController: UIViewController {
         editButton.addTarget(self, action: #selector(editButtonAction), for: .touchUpInside)
         settingScrollView.showsVerticalScrollIndicator = false
         readUserNameFromFirebase()
+        setupNavigationTitle(title: "Setting", withSearch: false)
     }
     
     

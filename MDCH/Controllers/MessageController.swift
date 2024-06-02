@@ -24,13 +24,18 @@ class MessageController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(MessageTableViewCell.self, forCellReuseIdentifier: "cell")
+        //setupNavigationTitle(title: "Message", withSearch: true)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        setupNavigationTitle(title: "Message", withSearch: true)
     }
     
     private func setupUI() {
-       
         view.addSubview(tableView)
         tableView.snp.makeConstraints { table in
-            table.right.left.top.bottom.equalToSuperview()
+            table.left.right.bottom.equalToSuperview()
+            table.top.equalTo(view.safeAreaLayoutGuide.snp.top)
         }
     }
 }
