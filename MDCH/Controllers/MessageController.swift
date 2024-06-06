@@ -24,7 +24,6 @@ class MessageController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(MessageTableViewCell.self, forCellReuseIdentifier: "cell")
-        //setupNavigationTitle(title: "Message", withSearch: true)
     }
     
     override func viewWillAppear(_ animated: Bool) {

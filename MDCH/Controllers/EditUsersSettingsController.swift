@@ -34,6 +34,7 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
         let scrollView = UIScrollView()
         scrollView.backgroundColor = .white
         scrollView.frame = view.bounds
+        scrollView.showsVerticalScrollIndicator = false
         scrollView.contentSize = contentSize
         return scrollView
     }()
@@ -53,7 +54,6 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         view.backgroundColor = .white
         navigationItem.hidesBackButton = true
-        settingScrollView.showsVerticalScrollIndicator = false
         setupUI()
         clearButton.addTarget(self, action: #selector(clearButtonAction), for: .touchUpInside)
         doneButton.addTarget(self, action: #selector(doneButtonAction), for: .touchUpInside)
@@ -193,6 +193,7 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
         contentView.addSubview(cancelButton)
         contentView.addSubview(tableView)
         contentView.addSubview(exitButton)
+        
         
         doneButton.snp.makeConstraints { done in
             done.right.equalTo(contentView.snp.right).offset(-15)
