@@ -23,7 +23,7 @@ class NewsCollectionViewCell: UICollectionViewCell {
     
     let postLabel: UILabel = {
        let post = UILabel()
-        post.text = "хуй"
+        post.text = "Описание поста"
         post.textColor = UIColor.black
         post.numberOfLines = 1
         return post
@@ -52,21 +52,31 @@ class NewsCollectionViewCell: UICollectionViewCell {
     
     let IndCountLabel: UILabel = {
        let label = UILabel()
-        label.text = ""
+        label.text = "0"
         label.textColor = UIColor.black
         
         return label
     }()
     
     var IndCount: Int = 0
+    var touchHeart: Bool = false
     
     let themeLabale: UILabel = {
        let theme = UILabel()
-        theme.text = "пизда"
+        theme.text = "Тема"
         theme.font = UIFont(name: "Helvetica-Bold", size: 12)
         theme.textColor = .black
         
         return theme
+    }()
+    
+    let timePostLabel: UILabel = {
+       let timePost = UILabel()
+        timePost.textColor = .black
+        timePost.font = UIFont(name: "Helvetica-Bold", size: 10)
+        timePost.text = "12:38"
+        
+        return timePost
     }()
    
     private func buttonRegister() {
@@ -85,6 +95,7 @@ class NewsCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(repostButton)
         contentView.addSubview(IndCountLabel)
         contentView.addSubview(themeLabale)
+        contentView.addSubview(timePostLabel)
         
         userName.snp.makeConstraints { user in
             user.left.equalTo(avatar.snp.right).offset(10)
@@ -125,6 +136,11 @@ class NewsCollectionViewCell: UICollectionViewCell {
         themeLabale.snp.makeConstraints { theme in
             theme.left.equalTo(userName.snp.right).offset(20)
             theme.centerY.equalTo(userName.snp.centerY)
+        }
+        
+        timePostLabel.snp.makeConstraints { time in
+            time.left.equalTo(themeLabale.snp.right).offset(15)
+            time.centerY.equalTo(themeLabale.snp.centerY)
         }
         
         
@@ -183,6 +199,32 @@ class NewsCollectionViewCell: UICollectionViewCell {
         }.resume()
     }
     
+    private func readPostDataFirebase(postID: String) {
+        let postCollectionRef = Firestore.firestore().collection("posts")
+        
+        postCollectionRef.document(postID).getDocument { [weak self] (document, error) in
+            guard let self = self else {return}
+            
+            if let document = document, document.exists {
+                if let theme = document.data()?["theme"] as? String {
+                    self.themeLabale.text = theme
+                }
+                
+                if let desription = document.data()?["description"] as? String {
+                    self.postLabel.text = desription
+                }
+            }
+            if let timestamp = document?.data()?["timestamp"] as? Timestamp {
+                let date = timestamp.dateValue()
+                let formatt = DateFormatter()
+                formatt.dateFormat = "dd.MM.yyyy HH:mm"
+                self.timePostLabel.text = formatt.string(from: date)
+            }else{
+                print("Документ не найден")
+            }
+        }
+    }
+    
     @objc func repostAction() {
         //С этим придется поработать когда будут реализованы сообщения
     }
@@ -192,8 +234,13 @@ class NewsCollectionViewCell: UICollectionViewCell {
     }
     
     @objc func heartAction() {
-        IndCount += 1
+        touchHeart.toggle()
+        IndCount += touchHeart ? 1 : -1
         IndCountLabel.text = "\(IndCount)"
+    }
+    
+    func configure(with postID: String) {
+        readPostDataFirebase(postID: postID)
     }
     
     required init?(coder: NSCoder) {

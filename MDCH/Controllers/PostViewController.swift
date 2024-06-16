@@ -7,7 +7,7 @@
 
 import UIKit
 import SnapKit
-
+import FirebaseFirestore
 
 
 
@@ -24,6 +24,7 @@ class PostViewController: UIViewController {
     let countSymbol = 500
     lazy var tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
     var isCheckMarkButton = false
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -101,7 +102,6 @@ class PostViewController: UIViewController {
         }
         
         
-        //сделать так чтобы текст не залазил на этот label, и реализовать минимальное количество символов поста и максимальное. Так же реализовать чтобы значение 0 менялось а зависимости оттого сколько символов вписывается 
         labelSymbol.text = "0/500"
         labelSymbol.font = UIFont(name: "Helvetica-Bold", size: 13)
         labelSymbol.textColor = .gray
@@ -117,8 +117,6 @@ class PostViewController: UIViewController {
     
     @objc func checkMarkAction() {
         if let text = titleTextField.text, !text.isEmpty {
-            //Здесь надо будеть сделать так что при нажатии на кнопку checkMarkAction название темы переходил в название CollectionView
-            
             isCheckMarkButton = true
             postTextView.becomeFirstResponder()
         } else {
@@ -128,12 +126,31 @@ class PostViewController: UIViewController {
     
     @objc func postAction() {
         if let descriptionText = postTextView.text, !descriptionText.isEmpty {
-            //Здесь надо будеть сделать так что при нажатии на кнопку checkMarkAction название темы переходил в название CollectionView и закрытие это окна и переход к посту в CollectionView
-            //dismissKeyboard()
+            
             if isCheckMarkButton {
-                //Здесь надо будеть сделать так что при нажатии на кнопку checkMarkAction название темы переходил в название CollectionView и закрытие это окна и переход к посту в CollectionView
+                
                 dismissKeyboard()
                 
+                
+                let theme = titleTextField.text ?? ""
+                let description = postTextView.text ?? ""
+                
+                
+                let postData: [String: Any] = [
+                    "theme": theme,
+                    "description": description,
+                    "timestamp": Timestamp(date: Date())
+                ]
+                
+                let db = Firestore.firestore()
+                db.collection("posts").addDocument(data: postData) { [weak self] error in
+                    if let error = error {
+                        print(error.localizedDescription)
+                    }else{
+                        print("Данные успешно сохранены!")
+                        self?.dismiss(animated: true, completion: nil)
+                    }
+                }
             } else {
                 AlertManager.showButtonMistake(on: self)
             }

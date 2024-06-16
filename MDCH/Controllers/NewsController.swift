@@ -7,7 +7,7 @@
 
 import UIKit
 import SnapKit
-
+import FirebaseFirestore
 
 
 class NewsController: UIViewController {
@@ -34,6 +34,8 @@ class NewsController: UIViewController {
         return contentView
     }()
     
+    var posts: [String] = []
+    
     private var contentSize: CGSize {
         CGSize(width: view.frame.width, height: view.frame.height + 400)
     }
@@ -48,6 +50,7 @@ class NewsController: UIViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(NewsCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        loadPosts()
     }
     
     private func setupUI() {
@@ -81,11 +84,27 @@ class NewsController: UIViewController {
         let vc = PostViewController()
         navigationController?.present(vc, animated: true)
     }
+    
+    func loadPosts() {
+        let postCollectionRef = Firestore.firestore().collection("posts")
+        
+        postCollectionRef.getDocuments { [weak self] (querySnapshot, error) in
+            guard let self = self else {return}
+            
+            if let error = error {
+                print("Error: \(error.localizedDescription)")
+            }else{
+                self.posts = querySnapshot?.documents.map{ $0.documentID } ?? []
+                self.collectionView.reloadData()
+            }
+            
+        }
+    }
 }
 
 extension NewsController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 3
+        return posts.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -93,8 +112,9 @@ extension NewsController: UICollectionViewDelegate, UICollectionViewDataSource, 
            UICollectionViewCell()
         }
         
-        cell.readUserNameFromFirebase()
-        
+        let postID = posts[indexPath.row]
+        cell.configure(with: postID)
+        print(postID)
         
         return cell
     }
