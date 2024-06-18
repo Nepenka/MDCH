@@ -86,11 +86,11 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
         clearButton.isHidden = nameUserSettingField.text?.isEmpty ?? true
     }
     
-   private func loadInfoFromFirebase() {
+    private func loadInfoFromFirebase() {
         let userCollectionRef = Firestore.firestore().collection("users")
         
         if let currentUserUID = Auth.auth().currentUser?.uid {
-            userCollectionRef.document(currentUserUID).getDocument { [weak self] (document, error)in
+            userCollectionRef.document(currentUserUID).getDocument { [weak self] (document, error) in
                 if let document = document, document.exists {
                     if let username = document.data()?["username"] as? String {
                         self?.username = username
@@ -98,7 +98,7 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
                     if let email = document.data()?["email"] as? String {
                         self?.email = email
                     }
-                    if let avatarURL = document.data()?["avatarURL"] as? String {
+                    if let avatarURL = document.data()?["avatarURL"] as? String, !avatarURL.isEmpty {
                         URLSession.shared.dataTask(with: (URL(string: avatarURL)!)) { [weak self] (data, response, error) in
                             if let error = error {
                                 print(error.localizedDescription)
@@ -106,7 +106,7 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
                             }
                             
                             guard let data = data, let image = UIImage(data: data) else {
-                                print("Ошибка при конвертации данных в изображении")
+                                print("Ошибка при конвертации данных в изображение")
                                 return
                             }
                             
@@ -115,9 +115,15 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
                                 self?.onUpdateAvatar?(image)
                             }
                         }.resume()
-                        
+                    } else {
+                        DispatchQueue.main.async {
+                            self?.avatarImage.image = UIImage(named: "default_image")
+                        }
                     }
                     DispatchQueue.main.async {
+                        if let text = self?.nameUserSettingField.text, text.isEmpty {
+                            self?.nameUserSettingField.text = self?.username
+                        }
                         self?.tableView.reloadData()
                     }
                 } else {
@@ -126,6 +132,7 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
             }
         }
     }
+
     
     func uploadImageToFirebase(image: UIImage) {
         guard let imageData = image.jpegData(compressionQuality: 0.5) else {
@@ -264,6 +271,20 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
             let newName = enteredText
             SaveInfo.shared.saveNewUserName(newName: newName)
             onSave?(newName)
+            
+            // Сохраните новое имя в Firestore
+            if let currentUserUID = Auth.auth().currentUser?.uid {
+                let userRef = Firestore.firestore().collection("users").document(currentUserUID)
+                userRef.updateData(["username": newName]) { error in
+                    if let error = error {
+                        print("Ошибка при обновлении имени пользователя: \(error.localizedDescription)")
+                    } else {
+                        print("Имя пользователя успешно обновлено")
+                    }
+                }
+            }
+        } else {
+            nameUserSettingField.text = username
         }
         
         navigationController?.popViewController(animated: true)
@@ -282,8 +303,23 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
     }
     
     @objc func editAvatrButtonAction() {
-        print("Edit Photo button tapped")
+        let alert = UIAlertController(title: "Choose Photo", message: nil, preferredStyle: .actionSheet)
+        let cameraAction = UIAlertAction(title: "Camera", style: .default) { _ in
+            self.openCamera()
+        }
+        let galleryAction = UIAlertAction(title: "Gallery", style: .default) { _ in
+            self.openGallery()
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         
+        alert.addAction(cameraAction)
+        alert.addAction(galleryAction)
+        alert.addAction(cancelAction)
+        
+        present(alert, animated: true, completion: nil)
+    }
+
+    func openCamera() {
         guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
             print("Camera is not available")
             return
@@ -296,18 +332,16 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
             }
             
             DispatchQueue.main.async {
-                self?.showCameraPicker()
+                self?.imagePicker.sourceType = .camera
+                self?.present(self!.imagePicker, animated: true, completion: nil)
             }
         }
     }
 
-    func showCameraPicker() {
-        imagePicker.sourceType = .camera
+    func openGallery() {
+        imagePicker.sourceType = .photoLibrary
         present(imagePicker, animated: true, completion: nil)
     }
-
-
-    
 }
 
 
@@ -336,9 +370,9 @@ extension EditUsersSettingsController: UIImagePickerControllerDelegate, UINaviga
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let pickedImage = info[.originalImage] as? UIImage {
+            avatarImage.image = pickedImage
             uploadImageToFirebase(image: pickedImage)
         }
-        dismiss(animated: true)
+        dismiss(animated: true, completion: nil)
     }
-    
 }

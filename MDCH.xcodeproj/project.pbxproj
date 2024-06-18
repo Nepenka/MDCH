@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9D04AA9F2C22161E00D9F6F9 /* ChangePasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D04AA9E2C22161E00D9F6F9 /* ChangePasswordController.swift */; };
 		9D41A69D2BA6357B00B499DD /* WebViewerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D41A69C2BA6357B00B499DD /* WebViewerController.swift */; };
 		9D509DF62BB3142C003443B4 /* NewsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D509DF52BB3142C003443B4 /* NewsCollectionViewCell.swift */; };
 		9D509DF82BB33083003443B4 /* SettingControllerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D509DF72BB33083003443B4 /* SettingControllerTableViewCell.swift */; };
@@ -51,6 +52,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9D04AA9E2C22161E00D9F6F9 /* ChangePasswordController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordController.swift; sourceTree = "<group>"; };
 		9D41A69C2BA6357B00B499DD /* WebViewerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewerController.swift; sourceTree = "<group>"; };
 		9D509DF52BB3142C003443B4 /* NewsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsCollectionViewCell.swift; sourceTree = "<group>"; };
 		9D509DF72BB33083003443B4 /* SettingControllerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingControllerTableViewCell.swift; sourceTree = "<group>"; };
@@ -194,6 +196,7 @@
 				9DB8C5F92BAF8AD100A3E4D9 /* SearchUserController.swift */,
 				9DB8C5FB2BAF8C0700A3E4D9 /* NewsController.swift */,
 				9DB8C5FD2BAF8C3B00A3E4D9 /* MessageController.swift */,
+				9D04AA9E2C22161E00D9F6F9 /* ChangePasswordController.swift */,
 				9DB8C5FF2BAF8C7900A3E4D9 /* SettingController.swift */,
 				9DD6F7D42BB0CCDA000C682B /* EditUsersSettingsController.swift */,
 				9DA2D54F2BE7F2790090F615 /* PostViewController.swift */,
@@ -308,6 +311,7 @@
 				9D509DF62BB3142C003443B4 /* NewsCollectionViewCell.swift in Sources */,
 				9DBB90A52B80F01500BB24A5 /* CustomButton.swift in Sources */,
 				9DB8C5FE2BAF8C3B00A3E4D9 /* MessageController.swift in Sources */,
+				9D04AA9F2C22161E00D9F6F9 /* ChangePasswordController.swift in Sources */,
 				9D6EAE6B2BB490220066573C /* EditUsersSettingsControllerCell.swift in Sources */,
 				9DA3D5C32B80D6430025466C /* AppDelegate.swift in Sources */,
 				9DD6F7D32BB0BAB8000C682B /* CustomLabel.swift in Sources */,

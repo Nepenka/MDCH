@@ -16,6 +16,8 @@ class SettingController: UIViewController {
     let editButton = CustomButton(title: "Edit", hasBackground: false, fontSize: .small)
     let nameLabel = CustomLabel(text: "default_name" , textColor: .black, fontSize: .big, fontStyle: .bold)
     let avatarImage = UIImageView(image: UIImage(named: "default_image"))
+    let tableView = UITableView()
+
     
     
     private lazy var settingScrollView: UIScrollView = {
@@ -37,7 +39,6 @@ class SettingController: UIViewController {
         CGSize(width: view.frame.width, height: view.frame.height + 400)
     }
     
-    let tableView = UITableView()
     
     
     override func viewDidLoad() {
@@ -48,6 +49,9 @@ class SettingController: UIViewController {
         settingScrollView.showsVerticalScrollIndicator = false
         readUserNameFromFirebase()
         setupNavigationTitle(title: "Setting", withSearch: false)
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(SettingControllerTableViewCell.self, forCellReuseIdentifier: "cell")
     }
     
     
@@ -96,6 +100,16 @@ class SettingController: UIViewController {
             name.centerX.equalToSuperview()
         }
         
+        
+        tableView.layer.borderColor = UIColor.black.cgColor
+        tableView.layer.borderWidth = 1.0
+        
+        tableView.snp.makeConstraints { table in
+                    table.top.equalTo(nameLabel.snp.bottom).offset(55)
+                    table.left.right.equalToSuperview()
+                    table.bottom.equalTo(contentView.snp.bottom)
+                }
+        
     }
 
     
@@ -113,3 +127,28 @@ class SettingController: UIViewController {
 }
 
 
+extension SettingController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as? SettingControllerTableViewCell else {return UITableViewCell()}
+        
+        if indexPath.row == 0 {
+            cell.textLabel?.text = "Change Password"
+            cell.textLabel?.textColor = .black
+            cell.textLabel?.font = UIFont(name: "Helevetica-Bold", size: 14)
+        }
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let vc = ChangePasswordController()
+        
+        vc.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    
+}
