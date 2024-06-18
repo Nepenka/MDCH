@@ -35,6 +35,9 @@ class NewsController: UIViewController {
     }()
     
     var posts: [String] = []
+    var previousPost: [String] = []
+    
+    private var listener: ListenerRegistration?
     
     private var contentSize: CGSize {
         CGSize(width: view.frame.width, height: view.frame.height + 400)
@@ -53,12 +56,15 @@ class NewsController: UIViewController {
         loadPosts()
     }
     
+    deinit {
+        listener?.remove()
+    }
+    
     private func setupUI() {
             view.addSubview(newsScrollView)
             view.addSubview(postButton)
             newsScrollView.addSubview(contentView)
             contentView.addSubview(collectionView)
-            //collectionViewSettings(collectionView)
             
             
             postButton.snp.makeConstraints { make in
@@ -77,7 +83,7 @@ class NewsController: UIViewController {
             }
             
         }
-        
+    
     
     @objc func postButtonAction() {
        
@@ -88,19 +94,41 @@ class NewsController: UIViewController {
     func loadPosts() {
         let postCollectionRef = Firestore.firestore().collection("posts")
         
-        postCollectionRef.getDocuments { [weak self] (querySnapshot, error) in
-            guard let self = self else {return}
+        listener = postCollectionRef.addSnapshotListener { [weak self] (querySnapshot, error) in
+            guard let self = self else { return }
             
             if let error = error {
                 print("Error: \(error.localizedDescription)")
-            }else{
-                self.posts = querySnapshot?.documents.map{ $0.documentID } ?? []
-                self.collectionView.reloadData()
+                return
             }
             
+            guard let querySnapshot = querySnapshot else {
+                print("No snapshot")
+                return
+            }
+            
+            let newPosts = querySnapshot.documents.map { $0.documentID }
+            let diff = newPosts.difference(from: self.posts)
+            
+            self.posts = newPosts
+            
+            DispatchQueue.main.async {
+                self.collectionView.performBatchUpdates({
+                    for change in diff {
+                        switch change {
+                        case .insert(let offset, _, _):
+                            self.collectionView.insertItems(at: [IndexPath(item: offset, section: 0)])
+                        case .remove(let offset, _, _):
+                            self.collectionView.deleteItems(at: [IndexPath(item: offset, section: 0)])
+                        }
+                    }
+                }, completion: nil)
+            }
         }
     }
 }
+
+
 
 extension NewsController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -114,7 +142,7 @@ extension NewsController: UICollectionViewDelegate, UICollectionViewDataSource, 
         
         let postID = posts[indexPath.row]
         cell.configure(with: postID)
-        print(postID)
+        cell.delegate = self
         
         return cell
     }
@@ -122,7 +150,51 @@ extension NewsController: UICollectionViewDelegate, UICollectionViewDataSource, 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: view.frame.width, height: 200)
     }
-    
-    
-    
+}
+
+extension NewsController: NewsCollectionViewDelegate {
+    func didTapDeleteButton(on cell: NewsCollectionViewCell) {
+        guard let indexPath = collectionView.indexPath(for: cell) else { return }
+        guard indexPath.row < posts.count else {
+            print("Index out of range: indexPath.row \(indexPath.row), posts count \(posts.count)")
+            return
+        }
+        
+        let postID = posts[indexPath.row]
+        let postCollectionRef = Firestore.firestore().collection("posts")
+        let documentRef = postCollectionRef.document(postID)
+        
+        documentRef.getDocument { [weak self] (document, error) in
+            guard let self = self else { return }
+            
+            if let error = error {
+                print("Error fetching document: \(error.localizedDescription)")
+                return
+            }
+            
+            guard document?.exists == true else {
+                print("Document does not exist")
+                return
+            }
+            
+            documentRef.delete { error in
+                if let error = error {
+                    print("Error deleting document: \(error.localizedDescription)")
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    if indexPath.row < self.posts.count {
+                        self.posts.remove(at: indexPath.row)
+                        self.collectionView.deleteItems(at: [indexPath])
+                    } else {
+                        print("Index path out of range after deletion: \(indexPath)")
+                    }
+                }
+                
+                print("Document successfully deleted!")
+            }
+        }
+    }
+
 }

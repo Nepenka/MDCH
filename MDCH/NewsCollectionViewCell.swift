@@ -4,6 +4,7 @@ import SnapKit
 import Firebase
 import FirebaseFirestore
 
+
 class NewsCollectionViewCell: UICollectionViewCell {
     
     let userName: UILabel = {
@@ -78,11 +79,21 @@ class NewsCollectionViewCell: UICollectionViewCell {
         
         return timePost
     }()
+    
+    let deleteButton: UIButton = {
+       let delete = UIButton()
+        delete.setImage(UIImage(systemName: "trash"), for: .normal)
+        
+        return delete
+    }()
+    
+    weak var delegate: NewsCollectionViewDelegate?
    
     private func buttonRegister() {
         repostButton.addTarget(self, action: #selector(repostAction), for: .touchUpInside)
         messageButton.addTarget(self, action: #selector(messageAction), for: .touchUpInside)
         heartButton.addTarget(self, action: #selector(heartAction), for: .touchUpInside)
+        deleteButton.addTarget(self, action: #selector(deleteAction), for: .touchUpInside)
     }
     
     
@@ -96,6 +107,7 @@ class NewsCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(IndCountLabel)
         contentView.addSubview(themeLabale)
         contentView.addSubview(timePostLabel)
+        contentView.addSubview(deleteButton)
         
         userName.snp.makeConstraints { user in
             user.left.equalTo(avatar.snp.right).offset(10)
@@ -141,6 +153,12 @@ class NewsCollectionViewCell: UICollectionViewCell {
         timePostLabel.snp.makeConstraints { time in
             time.left.equalTo(themeLabale.snp.right).offset(15)
             time.centerY.equalTo(themeLabale.snp.centerY)
+        }
+        
+        deleteButton.snp.makeConstraints { delete in
+            delete.left.equalTo(timePostLabel.snp.right).offset(10)
+            delete.centerY.equalTo(timePostLabel.snp.centerY)
+            delete.height.equalTo(30)
         }
         
         
@@ -239,6 +257,10 @@ class NewsCollectionViewCell: UICollectionViewCell {
         IndCountLabel.text = "\(IndCount)"
     }
     
+    @objc func deleteAction() {
+        delegate?.didTapDeleteButton(on: self)
+    }
+    
     func configure(with postID: String) {
         readPostDataFirebase(postID: postID)
     }
@@ -255,3 +277,8 @@ class NewsCollectionViewCell: UICollectionViewCell {
     }
 }
 
+
+protocol NewsCollectionViewDelegate: AnyObject {
+    func didTapDeleteButton(on cell: NewsCollectionViewCell)
+    
+}
