@@ -34,7 +34,7 @@ class MessageController: UIViewController {
         view.addSubview(tableView)
         tableView.snp.makeConstraints { table in
             table.left.right.bottom.equalToSuperview()
-            table.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            table.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(40)
         }
     }
 }

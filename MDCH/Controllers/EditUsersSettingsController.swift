@@ -27,6 +27,7 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
     let exitButton = CustomButton(title: "Exit",hasBackground: true ,fontSize: .big)
     var username = ""
     var email = ""
+    var id = ""
     let imagePicker = UIImagePickerController()
     
     
@@ -97,6 +98,9 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
                     }
                     if let email = document.data()?["email"] as? String {
                         self?.email = email
+                    }
+                    if let id = document.data()?["uniqueIdentifier"] as? String {
+                        self?.id = id
                     }
                     if let avatarURL = document.data()?["avatarURL"] as? String, !avatarURL.isEmpty {
                         URLSession.shared.dataTask(with: (URL(string: avatarURL)!)) { [weak self] (data, response, error) in
@@ -272,7 +276,7 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
             SaveInfo.shared.saveNewUserName(newName: newName)
             onSave?(newName)
             
-            // Сохраните новое имя в Firestore
+            
             if let currentUserUID = Auth.auth().currentUser?.uid {
                 let userRef = Firestore.firestore().collection("users").document(currentUserUID)
                 userRef.updateData(["username": newName]) { error in
@@ -347,7 +351,7 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
 
 extension EditUsersSettingsController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return 3
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -357,7 +361,11 @@ extension EditUsersSettingsController: UITableViewDelegate, UITableViewDataSourc
             cell.textLabel?.text = "Username: \(username)"
         }else if indexPath.row == 1 {
             cell.textLabel?.text = "Email: \(email)"
+        }else if indexPath.row == 2 {
+            cell.textLabel?.text = "ID: \(id)"
         }
+        
+        cell.textLabel?.font = UIFont(name: "Helvetica-Bold", size: 12)
        
         
         cell.layer.borderWidth = 0.5

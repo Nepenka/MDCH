@@ -52,6 +52,7 @@ class SettingController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(SettingControllerTableViewCell.self, forCellReuseIdentifier: "cell")
+        AuthService.shared.addUniqueIdentifierToExistingUsers()
     }
     
     

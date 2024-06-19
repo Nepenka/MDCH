@@ -43,16 +43,10 @@ class ForgotPasswordController: UIViewController {
         
         
         headerView.snp.makeConstraints { header in
-            header.top.equalToSuperview().offset(10)
-            header.right.left.equalToSuperview()
-            header.height.equalTo(230)
-        }
-        
-        resetPassword.snp.makeConstraints { reset in
-            reset.top.equalTo(emailField.snp.bottom).offset(22)
-            reset.centerX.equalTo(headerView.snp.centerX)
-            reset.height.equalTo(55)
-            reset.width.equalToSuperview().multipliedBy(0.85)
+            header.top.equalTo(view.snp.top).offset(50)
+            header.leading.equalTo(view.snp.leading)
+            header.trailing.equalTo(view.snp.trailing)
+            header.height.equalTo(270)
         }
         
         emailField.snp.makeConstraints { email in
@@ -62,6 +56,13 @@ class ForgotPasswordController: UIViewController {
             email.width.equalToSuperview().multipliedBy(0.85)
         }
         
+        resetPassword.snp.makeConstraints { reset in
+            reset.top.equalTo(emailField.snp.bottom).offset(22)
+            reset.centerX.equalTo(headerView.snp.centerX)
+            reset.height.equalTo(55)
+            reset.width.equalToSuperview().multipliedBy(0.85)
+        }
+                
         
     }
     
