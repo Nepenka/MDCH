@@ -10,7 +10,6 @@ import UIKit
 
 
 
-
 extension UIViewController {
     
      func setupNavigationTitle(title: String, withSearch: Bool) {
@@ -20,7 +19,7 @@ extension UIViewController {
         
         if withSearch == true {
             let searchController = UISearchController(searchResultsController: nil)
-            searchController.searchResultsUpdater = nil
+            searchController.searchResultsUpdater = self as? UISearchResultsUpdating
             navigationItem.searchController = searchController
             navigationItem.hidesSearchBarWhenScrolling = false
         } else {
