@@ -13,7 +13,7 @@ class SearchUserController: UIViewController, UISearchResultsUpdating {
     
     let resultLabel: UILabel = {
         let result = UILabel()
-        result.font = UIFont(name: "Helvetica-Bold", size: 10)
+        result.font = UIFont(name: "Helvetica-Bold", size: 14)
         result.numberOfLines = 0
         result.textAlignment = .center
         return result
@@ -24,9 +24,15 @@ class SearchUserController: UIViewController, UISearchResultsUpdating {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 40
-        imageView.layer.borderColor = UIColor.black.cgColor
-        imageView.layer.borderWidth = 1
         return imageView
+    }()
+    
+    
+    private var addButton: UIButton = {
+        let addUserButton = CustomButton(title: "Add", hasBackground: false, fontSize: .small)
+        addUserButton.addTarget(self, action: #selector(addAction), for: .touchUpInside)
+        addUserButton.isHidden = true
+        return addUserButton
     }()
     
     override func viewDidLoad() {
@@ -39,6 +45,7 @@ class SearchUserController: UIViewController, UISearchResultsUpdating {
     private func setupUI() {
         view.addSubview(resultLabel)
         view.addSubview(avatarImage)
+        view.addSubview(addButton)
         
         resultLabel.snp.makeConstraints { result in
             result.top.equalTo(view.safeAreaLayoutGuide).offset(20)
@@ -51,11 +58,20 @@ class SearchUserController: UIViewController, UISearchResultsUpdating {
             avatar.centerX.equalTo(view)
             avatar.width.height.equalTo(80)
         }
+        
+        addButton.snp.makeConstraints { add in
+            add.top.equalTo(avatarImage.snp.bottom).offset(30)
+            add.left.equalTo(view).offset(20)
+            add.right.equalTo(view).offset(-20)
+        }
     }
     
     func updateSearchResults(for searchController: UISearchController) {
         guard let searchText = searchController.searchBar.text, !searchText.isEmpty else {
             resultLabel.text = "Please enter a unique identifier"
+            avatarImage.layer.borderWidth = 0.5
+            avatarImage.layer.borderColor = UIColor.black.cgColor
+            addButton.isHidden = false
             return
         }
         searchUser(by: searchText)
@@ -86,7 +102,7 @@ class SearchUserController: UIViewController, UISearchResultsUpdating {
             if let avatarURL = URL(string: avatarURLString) {
                 self.loadAvatar(from: avatarURL)
             } else {
-                self.avatarImage.image = nil
+                self.avatarImage.image = UIImage(named: "default_image")
             }
         }
     }
@@ -101,5 +117,9 @@ class SearchUserController: UIViewController, UISearchResultsUpdating {
                 self.avatarImage.image = UIImage(data: data)
             }
         }.resume()
+    }
+    
+    @objc func addAction() {
+        
     }
 }
