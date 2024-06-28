@@ -72,14 +72,14 @@ class AuthHeaderView: UIView {
        }
        
        titleLabel.snp.makeConstraints { title in
-           title.top.equalTo(imageView.snp.bottom).offset(13)
+           title.top.equalTo(imageView.snp.bottom).offset(10)
            title.leading.equalToSuperview()
            title.trailing.equalToSuperview()
            
        }
        
        subTitleLabel.snp.makeConstraints { subTitle in
-           subTitle.top.equalTo(titleLabel.snp.bottom).offset(19)
+           subTitle.top.equalTo(titleLabel.snp.bottom).offset(15)
            subTitle.leading.equalToSuperview()
            subTitle.trailing.equalToSuperview()
        }

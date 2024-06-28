@@ -167,7 +167,8 @@ class RegisterController: UIViewController {
            }
     
     @objc func signInButtonAction() {
-        self.navigationController?.popToRootViewController(animated: true)
+        let vc = LoginController()
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc func dismissKeyboard() {

@@ -75,7 +75,7 @@ class NewsCollectionViewCell: UICollectionViewCell {
        let timePost = UILabel()
         timePost.textColor = .black
         timePost.font = UIFont(name: "Helvetica-Bold", size: 10)
-        timePost.text = "12:38"
+       
         
         return timePost
     }()
