@@ -164,58 +164,6 @@ class NewsCollectionViewCell: UICollectionViewCell {
         
     }
     
-    func readUserNameFromFirebase() {
-        let userCollectionRef = Firestore.firestore().collection("users")
-        
-        if let currentUserUID = Auth.auth().currentUser?.uid {
-            userCollectionRef.document(currentUserUID).getDocument { [weak self] (document, error) in
-                guard let self = self else { return }
-                
-                if let document = document, document.exists {
-                    if let username = document.data()?["username"] as? String {
-                        self.userName.text = username
-                    }
-                    if let avatarURL = document.data()?["avatarURL"] as? String, !avatarURL.isEmpty {
-                        self.loadAvatarImage(from: avatarURL)
-                    } else {
-                        self.avatar.image = UIImage(named: "default_image")
-                    }
-                } else {
-                    print("Документ не найден")
-                    self.avatar.image = UIImage(named: "default_image")
-                }
-            }
-        }
-    }
-    
-    private func loadAvatarImage(from url: String) {
-        guard let url = URL(string: url) else {
-            self.avatar.image = UIImage(named: "default_image")
-            return
-        }
-        
-        URLSession.shared.dataTask(with: url) { [weak self] (data, response, error) in
-            if let error = error {
-                print(error.localizedDescription)
-                DispatchQueue.main.async {
-                    self?.avatar.image = UIImage(named: "default_image")
-                }
-                return
-            }
-            
-            guard let data = data, let image = UIImage(data: data) else {
-                print("Ошибка при конвертации данных в изображение")
-                DispatchQueue.main.async {
-                    self?.avatar.image = UIImage(named: "default_image")
-                }
-                return
-            }
-            
-            DispatchQueue.main.async {
-                self?.avatar.image = image
-            }
-        }.resume()
-    }
     
     private func readPostDataFirebase(postID: String) {
         let postCollectionRef = Firestore.firestore().collection("posts")
@@ -261,8 +209,16 @@ class NewsCollectionViewCell: UICollectionViewCell {
         delegate?.didTapDeleteButton(on: self)
     }
     
-    func configure(with postID: String) {
-        readPostDataFirebase(postID: postID)
+    func configure(with post: Post) {
+        readPostDataFirebase(postID: post.postId)
+        userName.text = post.userName
+        
+        if post.avatarURL.isEmpty {
+            FirebaseHelper.loadAvatarImage(from: post.avatarURL, into: avatar)
+            } else {
+                avatar.image = UIImage(named: "default_image")
+            }
+        FirebaseHelper.readUserNameFromFirebase(userId: post.userId, userNameLabel: userName, avatarImageView: avatar)
     }
     
     required init?(coder: NSCoder) {
@@ -272,7 +228,6 @@ class NewsCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
-        readUserNameFromFirebase()
         buttonRegister()
     }
 }

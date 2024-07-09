@@ -135,18 +135,20 @@ class PostViewController: UIViewController {
                 let theme = titleTextField.text ?? ""
                 let description = postTextView.text ?? ""
                 
-                
+                let postId = UUID().uuidString 
+
                 let postData: [String: Any] = [
                     "theme": theme,
                     "description": description,
                     "timestamp": Timestamp(date: Date())
                 ]
-                
+
                 let db = Firestore.firestore()
-                db.collection("posts").addDocument(data: postData) { [weak self] error in
+                
+                db.collection("posts").document(postId).setData(postData) { [weak self] error in
                     if let error = error {
                         print(error.localizedDescription)
-                    }else{
+                    } else {
                         print("Данные успешно сохранены!")
                         self?.dismiss(animated: true, completion: nil)
                     }

@@ -30,7 +30,7 @@ class SearchUserController: UIViewController, UISearchResultsUpdating {
     
     private var addButton: UIButton = {
         let addUserButton = CustomButton(title: "Add", hasBackground: false, fontSize: .small)
-        addUserButton.addTarget(self, action: #selector(addAction), for: .touchUpInside)
+        addUserButton.addTarget(SearchUserController.self, action: #selector(addAction), for: .touchUpInside)
         addUserButton.isHidden = true
         return addUserButton
     }()
