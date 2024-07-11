@@ -15,21 +15,20 @@ import AVFoundation
 class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
     
     let nameUserSettingField = CustomTextField(authFieldType: .username)
-    let editAvatrButton = CustomButton(title: "Edit Photo", hasBackground: false ,fontSize: .small)
+    let editAvatarButton = CustomButton(title: "Edit Photo", hasBackground: false, fontSize: .small)
     var avatarImage = UIImageView(image: UIImage(named: "default_image"))
     let clearButton = UIButton(type: .custom)
     let clearImage = UIImage(systemName: "multiply.circle.fill")
-    let doneButton = CustomButton(title: "Done", hasBackground: false ,fontSize: .small)
-    let cancelButton = CustomButton(title: "Cancel", hasBackground: false ,fontSize: .small)
+    let doneButton = CustomButton(title: "Done", hasBackground: false, fontSize: .small)
+    let cancelButton = CustomButton(title: "Cancel", hasBackground: false, fontSize: .small)
     var onSave: ((String) -> Void)?
     var onUpdateAvatar: ((UIImage) -> Void)?
     let tableView = UITableView()
-    let exitButton = CustomButton(title: "Exit",hasBackground: true ,fontSize: .big)
+    let exitButton = CustomButton(title: "Exit", hasBackground: true, fontSize: .big)
     var username = ""
     var email = ""
     var id = ""
     let imagePicker = UIImagePickerController()
-    
     
     private lazy var settingScrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -40,8 +39,8 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
         return scrollView
     }()
     
-    private lazy var contentView: UIView =  {
-       let contentView = UIView()
+    private lazy var contentView: UIView = {
+        let contentView = UIView()
         contentView.backgroundColor = .white
         contentView.frame.size = contentSize
         return contentView
@@ -60,27 +59,23 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
         doneButton.addTarget(self, action: #selector(doneButtonAction), for: .touchUpInside)
         cancelButton.addTarget(self, action: #selector(cancelButtonAction), for: .touchUpInside)
         exitButton.addTarget(self, action: #selector(exitButtonAction), for: .touchUpInside)
-        editAvatrButton.addTarget(self, action: #selector(editAvatrButtonAction), for: .touchUpInside)
+        editAvatarButton.addTarget(self, action: #selector(editAvatarButtonAction), for: .touchUpInside)
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(EditUsersSettingsControllerCell.self, forCellReuseIdentifier: "cell")
         nameUserSettingField.delegate = self
         loadInfoFromFirebase()
         imagePicker.delegate = self
-        
     }
-    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updateClearButtonVisibility()
         loadInfoFromFirebase()
-        
     }
     
     @objc func textFieldDidChangeSelection(_ textField: UITextField) {
         updateClearButtonVisibility()
-        
     }
     
     private func updateClearButtonVisibility() {
@@ -92,18 +87,19 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
         
         if let currentUserUID = Auth.auth().currentUser?.uid {
             userCollectionRef.document(currentUserUID).getDocument { [weak self] (document, error) in
+                guard let self = self else { return }
                 if let document = document, document.exists {
                     if let username = document.data()?["username"] as? String {
-                        self?.username = username
+                        self.username = username
                     }
                     if let email = document.data()?["email"] as? String {
-                        self?.email = email
+                        self.email = email
                     }
                     if let id = document.data()?["uniqueIdentifier"] as? String {
-                        self?.id = id
+                        self.id = id
                     }
                     if let avatarURL = document.data()?["avatarURL"] as? String, !avatarURL.isEmpty {
-                        URLSession.shared.dataTask(with: (URL(string: avatarURL)!)) { [weak self] (data, response, error) in
+                        URLSession.shared.dataTask(with: URL(string: avatarURL)!) { (data, response, error) in
                             if let error = error {
                                 print(error.localizedDescription)
                                 return
@@ -115,20 +111,20 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
                             }
                             
                             DispatchQueue.main.async {
-                                self?.avatarImage.image = image
-                                self?.onUpdateAvatar?(image)
+                                self.avatarImage.image = image
+                                self.onUpdateAvatar?(image)
                             }
                         }.resume()
                     } else {
                         DispatchQueue.main.async {
-                            self?.avatarImage.image = UIImage(named: "default_image")
+                            self.avatarImage.image = UIImage(named: "default_image")
                         }
                     }
                     DispatchQueue.main.async {
-                        if let text = self?.nameUserSettingField.text, text.isEmpty {
-                            self?.nameUserSettingField.text = self?.username
+                        if let text = self.nameUserSettingField.text, text.isEmpty {
+                            self.nameUserSettingField.text = self.username
                         }
-                        self?.tableView.reloadData()
+                        self.tableView.reloadData()
                     }
                 } else {
                     print("Документ не найден")
@@ -136,7 +132,6 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
             }
         }
     }
-
     
     func uploadImageToFirebase(image: UIImage) {
         guard let imageData = image.jpegData(compressionQuality: 0.5) else {
@@ -145,66 +140,47 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
         }
         let storageRef = Storage.storage().reference().child("avatars").child("\(UUID().uuidString).jpg")
         storageRef.putData(imageData, metadata: nil) { [weak self] (metadata, error) in
+            guard let self = self else { return }
             guard let _ = metadata else {
                 print("Ошибка загрузки: \(error?.localizedDescription ?? "Error")")
                 return
             }
-            storageRef.downloadURL { [weak self] (url, error) in
+            storageRef.downloadURL { (url, error) in
                 guard let downloadURL = url else {
                     print("Ошибка при получении URL загруженного изображения: \(error?.localizedDescription ?? "Error")")
                     return
                 }
-                self?.saveImageURLToFirestore(imageURL: downloadURL.absoluteString)
+                self.saveImageURLToFirestore(imageURL: downloadURL.absoluteString)
             }
         }
     }
-
     
     func saveImageURLToFirestore(imageURL: String) {
         if let currentUserUID = Auth.auth().currentUser?.uid {
             let userRef = Firestore.firestore().collection("users").document(currentUserUID)
             userRef.updateData(["avatarURL": imageURL]) { [weak self] error in
+                guard let self = self else { return }
                 if let error = error {
                     print("Ошибка при обновлении информации о пользователе: \(error.localizedDescription)")
                 } else {
                     print("Изображение успешно загружено и сохранено")
-                    self?.loadInfoFromFirebase()
-                    if let url = URL(string: imageURL) {
-                        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-                            if let error = error {
-                                print("Ошибка при загрузке изображения: \(error.localizedDescription)")
-                                return
-                            }
-                            
-                            guard let data = data, let image = UIImage(data: data) else {
-                                print("Невозможно преобразовать данные в изображение")
-                                return
-                            }
-                            
-                            DispatchQueue.main.async {
-                                self?.avatarImage.image = image
-                            }
-                        }.resume()
-                    }
+                    self.loadInfoFromFirebase()
                 }
             }
         }
     }
     
-    
-
     private func setupUI() {
         view.addSubview(settingScrollView)
         settingScrollView.addSubview(contentView)
         contentView.addSubview(avatarImage)
-        contentView.addSubview(editAvatrButton)
+        contentView.addSubview(editAvatarButton)
         contentView.addSubview(nameUserSettingField)
         contentView.addSubview(clearButton)
         contentView.addSubview(doneButton)
         contentView.addSubview(cancelButton)
         contentView.addSubview(tableView)
         contentView.addSubview(exitButton)
-        
         
         doneButton.snp.makeConstraints { done in
             done.right.equalTo(contentView.snp.right).offset(-15)
@@ -217,22 +193,20 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
             avatar.top.equalTo(doneButton.snp.bottom).offset(20)
         }
 
-        avatarImage.layer.cornerRadius = 50
+        avatarImage.layer.cornerRadius = 60
         avatarImage.clipsToBounds = true
         
-        editAvatrButton.snp.makeConstraints { editButton in
+        editAvatarButton.snp.makeConstraints { editButton in
             editButton.top.equalTo(avatarImage.snp.bottom).offset(15)
             editButton.centerX.equalToSuperview()
         }
         
-        
         nameUserSettingField.snp.makeConstraints { nameField in
-            nameField.top.equalTo(editAvatrButton.snp.bottom).offset(30)
+            nameField.top.equalTo(editAvatarButton.snp.bottom).offset(30)
             nameField.left.right.equalToSuperview().inset(25)
             nameField.height.equalTo(50)
         }
         
-       
         clearButton.setImage(clearImage, for: .normal)
         clearButton.tintColor = .gray
         clearButton.snp.makeConstraints { clear in
@@ -257,16 +231,12 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
             exit.left.right.equalToSuperview().inset(35)
             exit.height.equalTo(55)
         }
-
         
         exitButton.layer.borderColor = UIColor.red.cgColor
         exitButton.layer.borderWidth = 1.0
-        
-        
-        
     }
     
-    @objc func clearButtonAction()  {
+    @objc func clearButtonAction() {
         nameUserSettingField.text = ""
     }
     
@@ -275,7 +245,6 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
             let newName = enteredText
             SaveInfo.shared.saveNewUserName(newName: newName)
             onSave?(newName)
-            
             
             if let currentUserUID = Auth.auth().currentUser?.uid {
                 let userRef = Firestore.firestore().collection("users").document(currentUserUID)
@@ -298,15 +267,13 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
         navigationController?.popViewController(animated: true)
     }
     
-    
     @objc func exitButtonAction() {
         let loginVc = LoginController()
         loginVc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(loginVc, animated: true)
-        
     }
     
-    @objc func editAvatrButtonAction() {
+    @objc func editAvatarButtonAction() {
         let alert = UIAlertController(title: "Choose Photo", message: nil, preferredStyle: .actionSheet)
         let cameraAction = UIAlertAction(title: "Camera", style: .default) { _ in
             self.openCamera()
@@ -322,7 +289,7 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
         
         present(alert, animated: true, completion: nil)
     }
-
+    
     func openCamera() {
         guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
             print("Camera is not available")
@@ -341,13 +308,12 @@ class EditUsersSettingsController: UIViewController, UITextFieldDelegate {
             }
         }
     }
-
+    
     func openGallery() {
         imagePicker.sourceType = .photoLibrary
         present(imagePicker, animated: true, completion: nil)
     }
 }
-
 
 extension EditUsersSettingsController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -355,19 +321,19 @@ extension EditUsersSettingsController: UITableViewDelegate, UITableViewDataSourc
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? EditUsersSettingsControllerCell else {return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? EditUsersSettingsControllerCell else {
+            return UITableViewCell()
+        }
         
         if indexPath.row == 0 {
             cell.textLabel?.text = "Username: \(username)"
-        }else if indexPath.row == 1 {
+        } else if indexPath.row == 1 {
             cell.textLabel?.text = "Email: \(email)"
-        }else if indexPath.row == 2 {
+        } else if indexPath.row == 2 {
             cell.textLabel?.text = "ID: \(id)"
         }
         
         cell.textLabel?.font = UIFont(name: "Helvetica-Bold", size: 12)
-       
-        
         cell.layer.borderWidth = 0.5
         
         return cell
@@ -375,7 +341,6 @@ extension EditUsersSettingsController: UITableViewDelegate, UITableViewDataSourc
 }
 
 extension EditUsersSettingsController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let pickedImage = info[.originalImage] as? UIImage {
             avatarImage.image = pickedImage

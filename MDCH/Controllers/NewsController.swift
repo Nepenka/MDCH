@@ -9,18 +9,17 @@ import UIKit
 import SnapKit
 import FirebaseFirestore
 
-
 class NewsController: UIViewController {
     
     let postButton: UIButton = CustomButton(title: "New Post", hasBackground: true, fontSize: .small)
     let collectionView: UICollectionView = {
-       let collectionLayout = UICollectionViewFlowLayout()
+        let collectionLayout = UICollectionViewFlowLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionLayout)
         return collectionView
     }()
     
     private lazy var newsScrollView: UIScrollView = {
-     let scrollView = UIScrollView()
+        let scrollView = UIScrollView()
         scrollView.backgroundColor = .white
         scrollView.frame = view.bounds
         scrollView.contentSize = contentSize
@@ -28,14 +27,14 @@ class NewsController: UIViewController {
     }()
     
     private lazy var contentView: UIView =  {
-       let contentView = UIView()
+        let contentView = UIView()
         contentView.backgroundColor = .white
         contentView.frame.size = contentSize
         return contentView
     }()
     
-    var posts: [String] = []
-    var previousPost: [String] = []
+    var posts: [Post] = [] 
+    var previousPosts: [Post] = []
     
     private var listener: ListenerRegistration?
     
@@ -61,32 +60,27 @@ class NewsController: UIViewController {
     }
     
     private func setupUI() {
-            view.addSubview(newsScrollView)
-            view.addSubview(postButton)
-            newsScrollView.addSubview(contentView)
-            contentView.addSubview(collectionView)
-            
-            
-            postButton.snp.makeConstraints { make in
-                make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-20)
-                make.right.equalTo(view).offset(-20)
-                    make.width.equalTo(150)
-                    make.height.equalTo(50)
-                }
+        view.addSubview(newsScrollView)
+        view.addSubview(postButton)
+        newsScrollView.addSubview(contentView)
+        contentView.addSubview(collectionView)
         
+        postButton.snp.makeConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-20)
+            make.right.equalTo(view).offset(-20)
+            make.width.equalTo(150)
+            make.height.equalTo(50)
+        }
         
         collectionView.isScrollEnabled = false
-            collectionView.snp.makeConstraints { collection in
-                collection.top.equalToSuperview()
-                collection.left.right.equalToSuperview()
-                collection.bottom.equalTo(postButton.snp.top).offset(-30)
-            }
-            
+        collectionView.snp.makeConstraints { collection in
+            collection.top.equalToSuperview()
+            collection.left.right.equalToSuperview()
+            collection.bottom.equalTo(postButton.snp.top).offset(-30)
         }
-    
+    }
     
     @objc func postButtonAction() {
-       
         let vc = PostViewController()
         navigationController?.present(vc, animated: true)
     }
@@ -107,10 +101,32 @@ class NewsController: UIViewController {
                 return
             }
             
-            let newPosts = querySnapshot.documents.map { $0.documentID }
-            let diff = newPosts.difference(from: self.posts)
+            print("Received \(querySnapshot.documents.count) documents")
             
-            self.posts = newPosts
+            self.posts = querySnapshot.documents.compactMap { document -> Post? in
+                let data = document.data()
+                print("Document data: \(data)")
+                
+                guard
+                    let postId = document.documentID as String?,
+                    let userId = data["userId"] as? String,
+                    let userName = data["userName"] as? String,
+                    let avatarURL = data["avatarURL"] as? String,
+                    let description = data["description"] as? String,
+                    let theme = data["theme"] as? String,
+                    let timestamp = data["timestamp"] as? Timestamp,
+                    var likedBy = data["likedBy"] as? [String]
+                    
+                    
+                else {
+                    print("Invalid data: \(data)")  
+                    return nil
+                }
+                return Post(postId: postId, userId: userId, userName: userName, avatarURL: avatarURL, description: description, theme: theme, timestamp: timestamp, likedBy: likedBy )
+            }
+            
+            let diff = self.posts.difference(from: self.previousPosts)
+            self.previousPosts = self.posts
             
             DispatchQueue.main.async {
                 self.collectionView.performBatchUpdates({
@@ -122,13 +138,15 @@ class NewsController: UIViewController {
                             self.collectionView.deleteItems(at: [IndexPath(item: offset, section: 0)])
                         }
                     }
-                }, completion: nil)
+                }, completion: { _ in
+                    self.collectionView.reloadData()
+                })
             }
         }
     }
+
+
 }
-
-
 
 extension NewsController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -136,12 +154,12 @@ extension NewsController: UICollectionViewDelegate, UICollectionViewDataSource, 
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? NewsCollectionViewCell else {return
-           UICollectionViewCell()
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? NewsCollectionViewCell else {
+            return UICollectionViewCell()
         }
         
-        let postID = posts[indexPath.row]
-        cell.configure(with: postID)
+        let post = posts[indexPath.row]
+        cell.configure(with: post)
         cell.delegate = self
         
         return cell
@@ -160,7 +178,7 @@ extension NewsController: NewsCollectionViewDelegate {
             return
         }
         
-        let postID = posts[indexPath.row]
+        let postID = posts[indexPath.row].postId
         let postCollectionRef = Firestore.firestore().collection("posts")
         let documentRef = postCollectionRef.document(postID)
         
@@ -186,6 +204,7 @@ extension NewsController: NewsCollectionViewDelegate {
                 DispatchQueue.main.async {
                     if indexPath.row < self.posts.count {
                         self.posts.remove(at: indexPath.row)
+                        self.previousPosts = self.posts
                         self.collectionView.deleteItems(at: [indexPath])
                     } else {
                         print("Index path out of range after deletion: \(indexPath)")
@@ -196,5 +215,4 @@ extension NewsController: NewsCollectionViewDelegate {
             }
         }
     }
-
 }

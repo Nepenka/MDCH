@@ -8,8 +8,7 @@
 import UIKit
 import SnapKit
 import FirebaseFirestore
-
-
+import FirebaseAuth
 
 class PostViewController: UIViewController {
     
@@ -47,14 +46,10 @@ class PostViewController: UIViewController {
         view.addSubview(postButton)
         view.addSubview(labelSymbol)
         
-        
-        
         themeLabel.snp.makeConstraints { theme in
             theme.top.equalToSuperview().offset(50)
             theme.left.right.equalToSuperview().offset(10)
         }
-        
-        
         
         titleTextField.placeholder = "Theme..."
         titleTextField.snp.makeConstraints { title in
@@ -92,15 +87,12 @@ class PostViewController: UIViewController {
             post.height.equalTo(300)
         }
     
-        
-        
         postButton.snp.makeConstraints { button in
             button.top.equalTo(postTextView.snp.bottom).offset(45)
             button.right.equalToSuperview().offset(-35)
             button.left.equalToSuperview().inset(170)
             button.height.equalTo(50)
         }
-        
         
         labelSymbol.text = "0/500"
         labelSymbol.font = UIFont(name: "Helvetica-Bold", size: 13)
@@ -112,7 +104,6 @@ class PostViewController: UIViewController {
             symbol.bottom.equalTo(postTextView.snp.bottom).inset(-25)
             symbol.width.equalTo(45)
         }
-        
     }
     
     @objc func checkMarkAction() {
@@ -126,36 +117,55 @@ class PostViewController: UIViewController {
     
     @objc func postAction() {
         if let descriptionText = postTextView.text, !descriptionText.isEmpty {
-            
             if isCheckMarkButton {
-                
                 dismissKeyboard()
-                
                 
                 let theme = titleTextField.text ?? ""
                 let description = postTextView.text ?? ""
                 
+                let postId = UUID().uuidString
+
+                guard let currentUserUID = Auth.auth().currentUser?.uid else { return }
                 
-                let postData: [String: Any] = [
-                    "theme": theme,
-                    "description": description,
-                    "timestamp": Timestamp(date: Date())
-                ]
-                
-                let db = Firestore.firestore()
-                db.collection("posts").addDocument(data: postData) { [weak self] error in
+                let userCollectionRef = Firestore.firestore().collection("users")
+                userCollectionRef.document(currentUserUID).getDocument { [weak self] (document, error) in
+                    guard let self = self else { return }
                     if let error = error {
-                        print(error.localizedDescription)
-                    }else{
-                        print("Данные успешно сохранены!")
-                        self?.dismiss(animated: true, completion: nil)
+                        print("Error getting user data: \(error.localizedDescription)")
+                        return
+                    }
+                    guard let document = document, document.exists, let userData = document.data() else {
+                        print("User document does not exist")
+                        return
+                    }
+                    
+                    let userName = userData["username"] as? String ?? "Unknown"
+                    let avatarURL = userData["avatarURL"] as? String ?? ""
+                    
+                    let postData: [String: Any] = [
+                        "userId": currentUserUID,
+                        "userName": userName,
+                        "avatarURL": avatarURL,
+                        "theme": theme,
+                        "description": description,
+                        "timestamp": Timestamp(date: Date()),
+                        "likedBy": []
+                    ]
+                    
+                    let db = Firestore.firestore()
+                    db.collection("posts").document(postId).setData(postData) { error in
+                        if let error = error {
+                            print(error.localizedDescription)
+                        } else {
+                            print("Данные успешно сохранены!")
+                            self.dismiss(animated: true, completion: nil)
+                        }
                     }
                 }
             } else {
                 AlertManager.showButtonMistake(on: self)
             }
-            
-            }else {
+        } else {
             AlertManager.showDescriptionMistake(on: self)
         }
     }
@@ -173,9 +183,9 @@ extension PostViewController: UITextViewDelegate {
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        guard let newText = textView.text as NSString? else {return true}
+        guard let newText = textView.text as NSString? else { return true }
         let updateText = newText.replacingCharacters(in: range, with: text)
-        
         return updateText.count < countSymbol
     }
 }
+

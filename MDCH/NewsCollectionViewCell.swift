@@ -4,7 +4,6 @@ import SnapKit
 import Firebase
 import FirebaseFirestore
 
-
 class NewsCollectionViewCell: UICollectionViewCell {
     
     let userName: UILabel = {
@@ -29,7 +28,6 @@ class NewsCollectionViewCell: UICollectionViewCell {
         post.numberOfLines = 1
         return post
     }()
-    
     
     let heartButton: UIButton = {
         let heart = UIButton()
@@ -75,19 +73,19 @@ class NewsCollectionViewCell: UICollectionViewCell {
        let timePost = UILabel()
         timePost.textColor = .black
         timePost.font = UIFont(name: "Helvetica-Bold", size: 10)
-       
-        
         return timePost
     }()
     
     let deleteButton: UIButton = {
        let delete = UIButton()
         delete.setImage(UIImage(systemName: "trash"), for: .normal)
-        
         return delete
     }()
     
     weak var delegate: NewsCollectionViewDelegate?
+    
+    var post: Post?
+    var userId: String? 
    
     private func buttonRegister() {
         repostButton.addTarget(self, action: #selector(repostAction), for: .touchUpInside)
@@ -95,7 +93,6 @@ class NewsCollectionViewCell: UICollectionViewCell {
         heartButton.addTarget(self, action: #selector(heartAction), for: .touchUpInside)
         deleteButton.addTarget(self, action: #selector(deleteAction), for: .touchUpInside)
     }
-    
     
     func setupViews() {
         contentView.addSubview(userName)
@@ -160,84 +157,34 @@ class NewsCollectionViewCell: UICollectionViewCell {
             delete.centerY.equalTo(timePostLabel.snp.centerY)
             delete.height.equalTo(30)
         }
-        
-        
-    }
-    
-    func readUserNameFromFirebase() {
-        let userCollectionRef = Firestore.firestore().collection("users")
-        
-        if let currentUserUID = Auth.auth().currentUser?.uid {
-            userCollectionRef.document(currentUserUID).getDocument { [weak self] (document, error) in
-                guard let self = self else { return }
-                
-                if let document = document, document.exists {
-                    if let username = document.data()?["username"] as? String {
-                        self.userName.text = username
-                    }
-                    if let avatarURL = document.data()?["avatarURL"] as? String, !avatarURL.isEmpty {
-                        self.loadAvatarImage(from: avatarURL)
-                    } else {
-                        self.avatar.image = UIImage(named: "default_image")
-                    }
-                } else {
-                    print("Документ не найден")
-                    self.avatar.image = UIImage(named: "default_image")
-                }
-            }
-        }
-    }
-    
-    private func loadAvatarImage(from url: String) {
-        guard let url = URL(string: url) else {
-            self.avatar.image = UIImage(named: "default_image")
-            return
-        }
-        
-        URLSession.shared.dataTask(with: url) { [weak self] (data, response, error) in
-            if let error = error {
-                print(error.localizedDescription)
-                DispatchQueue.main.async {
-                    self?.avatar.image = UIImage(named: "default_image")
-                }
-                return
-            }
-            
-            guard let data = data, let image = UIImage(data: data) else {
-                print("Ошибка при конвертации данных в изображение")
-                DispatchQueue.main.async {
-                    self?.avatar.image = UIImage(named: "default_image")
-                }
-                return
-            }
-            
-            DispatchQueue.main.async {
-                self?.avatar.image = image
-            }
-        }.resume()
     }
     
     private func readPostDataFirebase(postID: String) {
         let postCollectionRef = Firestore.firestore().collection("posts")
         
         postCollectionRef.document(postID).getDocument { [weak self] (document, error) in
-            guard let self = self else {return}
+            guard let self = self else { return }
             
             if let document = document, document.exists {
                 if let theme = document.data()?["theme"] as? String {
                     self.themeLabale.text = theme
                 }
                 
-                if let desription = document.data()?["description"] as? String {
-                    self.postLabel.text = desription
+                if let description = document.data()?["description"] as? String {
+                    self.postLabel.text = description
                 }
-            }
-            if let timestamp = document?.data()?["timestamp"] as? Timestamp {
-                let date = timestamp.dateValue()
-                let formatt = DateFormatter()
-                formatt.dateFormat = "dd.MM.yyyy HH:mm"
-                self.timePostLabel.text = formatt.string(from: date)
-            }else{
+                
+                if let userId = document.data()?["userId"] as? String {
+                    FirebaseHelper.readUserNameFromFirebase(userId: userId, userNameLabel: self.userName, avatarImageView: self.avatar)
+                }
+                
+                if let timestamp = document.data()?["timestamp"] as? Timestamp {
+                    let date = timestamp.dateValue()
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "dd.MM.yyyy HH:mm"
+                    self.timePostLabel.text = formatter.string(from: date)
+                }
+            } else {
                 print("Документ не найден")
             }
         }
@@ -252,17 +199,38 @@ class NewsCollectionViewCell: UICollectionViewCell {
     }
     
     @objc func heartAction() {
-        touchHeart.toggle()
-        IndCount += touchHeart ? 1 : -1
-        IndCountLabel.text = "\(IndCount)"
+        guard let post = post, let userId = userId else { return }
+
+                let isLiked = post.likedBy.contains(userId)
+                FirebaseHelper.updateLikes(postId: post.postId, userId: userId, isLiked: isLiked) { [weak self] error in
+                    if let error = error {
+                        print("Error updating likes: \(error.localizedDescription)")
+                    } else {
+
+                        if isLiked {
+                            self?.post?.likedBy.removeAll { $0 == userId }
+                        } else {
+                            self?.post?.likedBy.append(userId)
+                        }
+                        
+                        DispatchQueue.main.async {
+                            self?.IndCountLabel.text = "\(self?.post?.likes ?? 0)"
+                        }
+                    }
+                }
     }
     
     @objc func deleteAction() {
         delegate?.didTapDeleteButton(on: self)
     }
     
-    func configure(with postID: String) {
-        readPostDataFirebase(postID: postID)
+    func configure(with post: Post) {
+        self.post = post
+               postLabel.text = post.description
+               themeLabale.text = post.theme
+               timePostLabel.text = DateFormatter.localizedString(from: post.timestamp.dateValue(), dateStyle: .short, timeStyle: .short)
+               FirebaseHelper.readUserNameFromFirebase(userId: post.userId, userNameLabel: userName, avatarImageView: avatar)
+               IndCountLabel.text = "\(post.likes)"
     }
     
     required init?(coder: NSCoder) {
@@ -272,13 +240,11 @@ class NewsCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
-        readUserNameFromFirebase()
         buttonRegister()
     }
 }
 
-
 protocol NewsCollectionViewDelegate: AnyObject {
     func didTapDeleteButton(on cell: NewsCollectionViewCell)
-    
 }
+

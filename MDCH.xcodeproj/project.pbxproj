@@ -16,6 +16,8 @@
 		9D64D2602BA9D74D00157E44 /* RegisterUserRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D64D25F2BA9D74D00157E44 /* RegisterUserRequest.swift */; };
 		9D64D2622BA9DC8F00157E44 /* LoginUserRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D64D2612BA9DC8F00157E44 /* LoginUserRequest.swift */; };
 		9D64D2642BA9F4D100157E44 /* Validator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D64D2632BA9F4D100157E44 /* Validator.swift */; };
+		9D6C8EF12C3DF164001F6DFC /* FirebaseHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6C8EF02C3DF164001F6DFC /* FirebaseHelper.swift */; };
+		9D6C8EF32C3DF64A001F6DFC /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6C8EF22C3DF64A001F6DFC /* Message.swift */; };
 		9D6EAE6B2BB490220066573C /* EditUsersSettingsControllerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6EAE6A2BB490220066573C /* EditUsersSettingsControllerCell.swift */; };
 		9D7029E02BA84D4F0007DF10 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7029DF2BA84D4F0007DF10 /* AlertManager.swift */; };
 		9D7CD3C02C05CA6C00E6A4C0 /* CustomCollectionViewSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7CD3BF2C05CA6C00E6A4C0 /* CustomCollectionViewSettings.swift */; };
@@ -47,6 +49,7 @@
 		9DB8C6002BAF8C7900A3E4D9 /* SettingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB8C5FF2BAF8C7900A3E4D9 /* SettingController.swift */; };
 		9DBB90A32B80E93700BB24A5 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DBB90A22B80E93700BB24A5 /* CustomTextField.swift */; };
 		9DBB90A52B80F01500BB24A5 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DBB90A42B80F01500BB24A5 /* CustomButton.swift */; };
+		9DC7C0F22C3AD2060006C386 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC7C0F12C3AD2060006C386 /* Post.swift */; };
 		9DD6F7D32BB0BAB8000C682B /* CustomLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DD6F7D22BB0BAB8000C682B /* CustomLabel.swift */; };
 		9DD6F7D52BB0CCDA000C682B /* EditUsersSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DD6F7D42BB0CCDA000C682B /* EditUsersSettingsController.swift */; };
 /* End PBXBuildFile section */
@@ -61,6 +64,8 @@
 		9D64D25F2BA9D74D00157E44 /* RegisterUserRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterUserRequest.swift; sourceTree = "<group>"; };
 		9D64D2612BA9DC8F00157E44 /* LoginUserRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginUserRequest.swift; sourceTree = "<group>"; };
 		9D64D2632BA9F4D100157E44 /* Validator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validator.swift; sourceTree = "<group>"; };
+		9D6C8EF02C3DF164001F6DFC /* FirebaseHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseHelper.swift; sourceTree = "<group>"; };
+		9D6C8EF22C3DF64A001F6DFC /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		9D6EAE6A2BB490220066573C /* EditUsersSettingsControllerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditUsersSettingsControllerCell.swift; sourceTree = "<group>"; };
 		9D7029DF2BA84D4F0007DF10 /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 		9D7CD3BF2C05CA6C00E6A4C0 /* CustomCollectionViewSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCollectionViewSettings.swift; sourceTree = "<group>"; };
@@ -88,6 +93,7 @@
 		9DB8C5FF2BAF8C7900A3E4D9 /* SettingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingController.swift; sourceTree = "<group>"; };
 		9DBB90A22B80E93700BB24A5 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 		9DBB90A42B80F01500BB24A5 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
+		9DC7C0F12C3AD2060006C386 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		9DD6F7D22BB0BAB8000C682B /* CustomLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLabel.swift; sourceTree = "<group>"; };
 		9DD6F7D42BB0CCDA000C682B /* EditUsersSettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditUsersSettingsController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -114,6 +120,8 @@
 			children = (
 				9D64D2612BA9DC8F00157E44 /* LoginUserRequest.swift */,
 				9D64D25F2BA9D74D00157E44 /* RegisterUserRequest.swift */,
+				9DC7C0F12C3AD2060006C386 /* Post.swift */,
+				9D6C8EF22C3DF64A001F6DFC /* Message.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -151,6 +159,7 @@
 				9D64D25E2BA9D72F00157E44 /* Models */,
 				9D7029DF2BA84D4F0007DF10 /* AlertManager.swift */,
 				9D64D25C2BA9D64300157E44 /* AuthService.swift */,
+				9D6C8EF02C3DF164001F6DFC /* FirebaseHelper.swift */,
 				9D64D2632BA9F4D100157E44 /* Validator.swift */,
 				9D7D08C92BAF26DF001A318E /* MessageTableViewCell.swift */,
 				9D509DF52BB3142C003443B4 /* NewsCollectionViewCell.swift */,
@@ -314,13 +323,16 @@
 				9D04AA9F2C22161E00D9F6F9 /* ChangePasswordController.swift in Sources */,
 				9D6EAE6B2BB490220066573C /* EditUsersSettingsControllerCell.swift in Sources */,
 				9DA3D5C32B80D6430025466C /* AppDelegate.swift in Sources */,
+				9D6C8EF12C3DF164001F6DFC /* FirebaseHelper.swift in Sources */,
 				9DD6F7D32BB0BAB8000C682B /* CustomLabel.swift in Sources */,
 				9DA3D5E72B80D9790025466C /* LoginController.swift in Sources */,
 				9D64D2642BA9F4D100157E44 /* Validator.swift in Sources */,
 				9D7CD3C02C05CA6C00E6A4C0 /* CustomCollectionViewSettings.swift in Sources */,
 				9DBB90A32B80E93700BB24A5 /* CustomTextField.swift in Sources */,
 				9D8786932BCC2F47005582F4 /* DataManager.swift in Sources */,
+				9D6C8EF32C3DF64A001F6DFC /* Message.swift in Sources */,
 				9D64D2602BA9D74D00157E44 /* RegisterUserRequest.swift in Sources */,
+				9DC7C0F22C3AD2060006C386 /* Post.swift in Sources */,
 				9D8786912BCC2E87005582F4 /* SaveInfo.swift in Sources */,
 				9D64D2622BA9DC8F00157E44 /* LoginUserRequest.swift in Sources */,
 				9D8786952BCD41AC005582F4 /* Rechability.swift in Sources */,

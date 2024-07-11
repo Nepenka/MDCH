@@ -13,7 +13,7 @@ import SnapKit
 class MessageController: UIViewController {
    
     let tableView: UITableView = .init()
-    
+    let message: [Message] = []
     
     
     override func viewDidLoad() {
@@ -47,14 +47,16 @@ class MessageController: UIViewController {
 
 extension MessageController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return message.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? MessageTableViewCell else {return UITableViewCell()}
         
-        cell.layer.borderColor = UIColor.red.cgColor
-        cell.layer.borderWidth = 2.0
+        let messages = message[indexPath.row]
+        cell.configure(with: messages)
+        cell.layer.borderColor = UIColor.black.cgColor
+        cell.layer.borderWidth = 0.5
         
         return cell
     }
