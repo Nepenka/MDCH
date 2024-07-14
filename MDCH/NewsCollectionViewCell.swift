@@ -4,7 +4,6 @@ import SnapKit
 import Firebase
 import FirebaseFirestore
 
-
 class NewsCollectionViewCell: UICollectionViewCell {
     
     let userName: UILabel = {
@@ -30,24 +29,22 @@ class NewsCollectionViewCell: UICollectionViewCell {
         return post
     }()
     
-    
     let heartButton: UIButton = {
         let heart = UIButton()
         heart.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+        heart.addTarget(NewsCollectionViewCell.self, action: #selector(heartAction), for: .touchUpInside)
         return heart
     }()
     
     let messageButton: UIButton = {
        let message = UIButton()
         message.setImage(UIImage(systemName: "message"), for: .normal)
-        
         return message
     }()
     
     let repostButton: UIButton = {
        let repost = UIButton()
         repost.setImage(UIImage(systemName: "arrow.turn.up.right"), for: .normal)
-        
         return repost
     }()
     
@@ -55,11 +52,9 @@ class NewsCollectionViewCell: UICollectionViewCell {
        let label = UILabel()
         label.text = "0"
         label.textColor = UIColor.black
-        
         return label
     }()
     
-    var IndCount: Int = 0
     var touchHeart: Bool = false
     
     let themeLabale: UILabel = {
@@ -67,7 +62,6 @@ class NewsCollectionViewCell: UICollectionViewCell {
         theme.text = "Тема"
         theme.font = UIFont(name: "Helvetica-Bold", size: 12)
         theme.textColor = .black
-        
         return theme
     }()
     
@@ -75,27 +69,29 @@ class NewsCollectionViewCell: UICollectionViewCell {
        let timePost = UILabel()
         timePost.textColor = .black
         timePost.font = UIFont(name: "Helvetica-Bold", size: 10)
-       
-        
         return timePost
     }()
     
     let deleteButton: UIButton = {
        let delete = UIButton()
         delete.setImage(UIImage(systemName: "trash"), for: .normal)
-        
         return delete
     }()
     
     weak var delegate: NewsCollectionViewDelegate?
-   
+    
+    var post: Post?
+    var userId: String?
+    private var isLiked = false
+    var updateCellClosure: (() -> Void)?
+
     private func buttonRegister() {
         repostButton.addTarget(self, action: #selector(repostAction), for: .touchUpInside)
         messageButton.addTarget(self, action: #selector(messageAction), for: .touchUpInside)
         heartButton.addTarget(self, action: #selector(heartAction), for: .touchUpInside)
+        heartButton.removeTarget(self, action: #selector(heartAction), for: .touchUpInside)
         deleteButton.addTarget(self, action: #selector(deleteAction), for: .touchUpInside)
     }
-    
     
     func setupViews() {
         contentView.addSubview(userName)
@@ -160,35 +156,42 @@ class NewsCollectionViewCell: UICollectionViewCell {
             delete.centerY.equalTo(timePostLabel.snp.centerY)
             delete.height.equalTo(30)
         }
-        
-        
     }
-    
     
     private func readPostDataFirebase(postID: String) {
         let postCollectionRef = Firestore.firestore().collection("posts")
         
         postCollectionRef.document(postID).getDocument { [weak self] (document, error) in
-            guard let self = self else {return}
+            guard let self = self else { return }
             
             if let document = document, document.exists {
                 if let theme = document.data()?["theme"] as? String {
                     self.themeLabale.text = theme
                 }
                 
-                if let desription = document.data()?["description"] as? String {
-                    self.postLabel.text = desription
+                if let description = document.data()?["description"] as? String {
+                    self.postLabel.text = description
                 }
-            }
-            if let timestamp = document?.data()?["timestamp"] as? Timestamp {
-                let date = timestamp.dateValue()
-                let formatt = DateFormatter()
-                formatt.dateFormat = "dd.MM.yyyy HH:mm"
-                self.timePostLabel.text = formatt.string(from: date)
-            }else{
+                
+                if let userId = document.data()?["userId"] as? String {
+                    FirebaseHelper.readUserNameFromFirebase(userId: userId, userNameLabel: self.userName, avatarImageView: self.avatar)
+                }
+                
+                if let timestamp = document.data()?["timestamp"] as? Timestamp {
+                    let date = timestamp.dateValue()
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "dd.MM.yyyy HH:mm"
+                    self.timePostLabel.text = formatter.string(from: date)
+                }
+            } else {
                 print("Документ не найден")
             }
         }
+    }
+    
+    private func setHeartButtonState(isLiked: Bool) {
+        let imageName = isLiked ? "heart.fill" : "heart"
+        heartButton.setImage(UIImage(systemName: imageName), for: .normal)
     }
     
     @objc func repostAction() {
@@ -200,25 +203,47 @@ class NewsCollectionViewCell: UICollectionViewCell {
     }
     
     @objc func heartAction() {
-        touchHeart.toggle()
-        IndCount += touchHeart ? 1 : -1
-        IndCountLabel.text = "\(IndCount)"
-    }
+            guard let post = post, let userId = userId else { return }
+            
+            let isCurrentlyLiked = post.likedBy.contains(userId)
+            let newLikeState = !isCurrentlyLiked
+            
+            FirebaseHelper.updateLikes(postId: post.postId, userId: userId, isLiked: newLikeState) { [weak self] error in
+                if let error = error {
+                    print("Error updating likes: \(error.localizedDescription)")
+                } else {
+                    DispatchQueue.main.async {
+                        if newLikeState {
+                            self?.post?.likedBy.append(userId)
+                        } else {
+                            if let index = self?.post?.likedBy.firstIndex(of: userId) {
+                                self?.post?.likedBy.remove(at: index)
+                            }
+                        }
+                        self?.IndCountLabel.text = "\(self?.post?.likedBy.count ?? 0)"
+                        self?.setHeartButtonState(isLiked: newLikeState)
+                        
+                        self?.updateCellClosure?()
+                    }
+                }
+            }
+        }
+    
     
     @objc func deleteAction() {
         delegate?.didTapDeleteButton(on: self)
     }
     
-    func configure(with post: Post) {
-        readPostDataFirebase(postID: post.postId)
-        userName.text = post.userName
-        
-        if post.avatarURL.isEmpty {
-            FirebaseHelper.loadAvatarImage(from: post.avatarURL, into: avatar)
-            } else {
-                avatar.image = UIImage(named: "default_image")
-            }
-        FirebaseHelper.readUserNameFromFirebase(userId: post.userId, userNameLabel: userName, avatarImageView: avatar)
+    func configure(with post: Post, userId: String) {
+        self.post = post
+                self.userId = userId
+                postLabel.text = post.description
+                themeLabale.text = post.theme
+                timePostLabel.text = DateFormatter.localizedString(from: post.timestamp.dateValue(), dateStyle: .short, timeStyle: .short)
+                FirebaseHelper.readUserNameFromFirebase(userId: post.userId, userNameLabel: userName, avatarImageView: avatar)
+                IndCountLabel.text = "\(post.likedBy.count)"
+                let isLiked = post.likedBy.contains(userId)
+                setHeartButtonState(isLiked: isLiked)
     }
     
     required init?(coder: NSCoder) {
@@ -232,8 +257,7 @@ class NewsCollectionViewCell: UICollectionViewCell {
     }
 }
 
-
 protocol NewsCollectionViewDelegate: AnyObject {
     func didTapDeleteButton(on cell: NewsCollectionViewCell)
-    
 }
+

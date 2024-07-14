@@ -9,11 +9,9 @@ import UIKit
 import FirebaseFirestore
 import FirebaseAuth
 
-
 class FirebaseHelper {
     
-    
-    //MARK: - Загрузка информации о пользователе
+    // MARK: - Загрузка информации о пользователе
     public static func readUserNameFromFirebase(userId: String, userNameLabel: UILabel, avatarImageView: UIImageView) {
         let userCollectionRef = Firestore.firestore().collection("users")
         
@@ -34,8 +32,7 @@ class FirebaseHelper {
         }
     }
     
-    
-    //MARK: - Загрузка Аватара из Firebase
+    // MARK: - Загрузка Аватара из Firebase
     public static func loadAvatarImage(from url: String, into imageView: UIImageView) {
         guard let url = URL(string: url) else {
             imageView.image = UIImage(named: "default_image")
@@ -64,4 +61,37 @@ class FirebaseHelper {
             }
         }.resume()
     }
+    
+    // MARK: - Обновление лайков
+    static func updateLikes(postId: String, userId: String, isLiked: Bool, completion: @escaping (Error?) -> Void) {
+            let postRef = Firestore.firestore().collection("posts").document(postId)
+            
+            Firestore.firestore().runTransaction({ (transaction, errorPointer) -> Any? in
+                let postDocument: DocumentSnapshot
+                do {
+                    try postDocument = transaction.getDocument(postRef)
+                } catch let error as NSError {
+                    errorPointer?.pointee = error
+                    return nil
+                }
+                
+                guard let likedBy = postDocument.data()?["likedBy"] as? [String] else {
+                    let error = NSError(domain: "AppErrorDomain", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unable to retrieve likedBy from snapshot \(postDocument)"])
+                    errorPointer?.pointee = error
+                    return nil
+                }
+                
+                var updatedLikedBy = likedBy
+                if isLiked {
+                    updatedLikedBy.removeAll { $0 == userId }
+                } else {
+                    updatedLikedBy.append(userId)
+                }
+                
+                transaction.updateData(["likedBy": updatedLikedBy], forDocument: postRef)
+                return nil
+            }) { (object, error) in
+                completion(error)
+            }
+        }
 }

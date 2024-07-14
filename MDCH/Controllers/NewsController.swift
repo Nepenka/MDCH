@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 import FirebaseFirestore
+import FirebaseAuth
 
 class NewsController: UIViewController {
     
@@ -33,10 +34,11 @@ class NewsController: UIViewController {
         return contentView
     }()
     
-    var posts: [Post] = [] 
+    var posts: [Post] = []
     var previousPosts: [Post] = []
     
     private var listener: ListenerRegistration?
+    private var currentUserId: String?
     
     private var contentSize: CGSize {
         CGSize(width: view.frame.width, height: view.frame.height + 400)
@@ -52,7 +54,19 @@ class NewsController: UIViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(NewsCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
-        loadPosts()
+        
+        // Используем addStateDidChangeListener для отслеживания изменений состояния аутентификации
+        Auth.auth().addStateDidChangeListener { [weak self] auth, user in
+            guard let self = self else { return }
+            
+            if let user = user {
+                self.currentUserId = user.uid
+                self.loadPosts()
+            } else {
+                // Handle user not logged in
+                print("User not logged in")
+            }
+        }
     }
     
     deinit {
@@ -105,17 +119,22 @@ class NewsController: UIViewController {
             
             self.posts = querySnapshot.documents.compactMap { document -> Post? in
                 let data = document.data()
+                print("Document data: \(data)")
                 
                 guard
-                    let postId = data["postId"] as? String,
-                    let userName = data["userName"] as? String,
+                    let postId = document.documentID as String?,
                     let userId = data["userId"] as? String,
+                    let userName = data["userName"] as? String,
                     let avatarURL = data["avatarURL"] as? String,
-                    let timestamp = data["timestamp"] as? Timestamp
+                    let description = data["description"] as? String,
+                    let theme = data["theme"] as? String,
+                    let timestamp = data["timestamp"] as? Timestamp,
+                    let likedBy = data["likedBy"] as? [String]
                 else {
+                    print("Invalid data: \(data)")
                     return nil
                 }
-                return Post(postId: postId, userId: userId, userName: userName, timestamp: timestamp, avatarURL: avatarURL)
+                return Post(postId: postId, userId: userId, userName: userName, avatarURL: avatarURL, description: description, theme: theme, timestamp: timestamp, likedBy: likedBy )
             }
             
             let diff = self.posts.difference(from: self.previousPosts)
@@ -150,8 +169,19 @@ extension NewsController: UICollectionViewDelegate, UICollectionViewDataSource, 
         }
         
         let post = posts[indexPath.row]
-        cell.configure(with: post)
+        
+        if let userId = currentUserId {
+            cell.configure(with: post, userId: userId)
+        } else {
+            print("User ID not available")
+        }
         cell.delegate = self
+        
+        cell.updateCellClosure = { [weak self] in
+            DispatchQueue.main.async {
+                self?.collectionView.reloadItems(at: [indexPath])
+            }
+        }
         
         return cell
     }
@@ -206,4 +236,32 @@ extension NewsController: NewsCollectionViewDelegate {
             }
         }
     }
+    
+    func didTapLikeButton(on cell: NewsCollectionViewCell) {
+            guard let indexPath = collectionView.indexPath(for: cell) else { return }
+            guard let userId = currentUserId else { return }
+            
+            let post = posts[indexPath.row]
+            
+            let isCurrentlyLiked = post.likedBy.contains(userId)
+            let newLikeState = !isCurrentlyLiked
+            
+            FirebaseHelper.updateLikes(postId: post.postId, userId: userId, isLiked: newLikeState) { [weak self] error in
+                if let error = error {
+                    print("Error updating likes: \(error.localizedDescription)")
+                } else {
+                    DispatchQueue.main.async {
+                        if newLikeState {
+                            self?.posts[indexPath.row].likedBy.append(userId)
+                        } else {
+                            if let index = self?.posts[indexPath.row].likedBy.firstIndex(of: userId) {
+                                self?.posts[indexPath.row].likedBy.remove(at: index)
+                            }
+                        }
+                        
+                        self?.collectionView.reloadItems(at: [indexPath])
+                    }
+                }
+            }
+        }
 }
